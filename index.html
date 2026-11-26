@@ -136,7 +136,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 #pn-seg.panel{width:100vw;margin-left:calc(50% - 50vw);padding:0 14px;}
 .emb-head{display:flex;justify-content:flex-end;padding:0 4px 8px;}
 .emb-wrap{border:1px solid rgba(167,139,250,.18);border-radius:14px;overflow:hidden;background:#0b1525;box-shadow:0 20px 50px rgba(0,0,0,.35);}
-.emb{width:100%;height:calc(100vh - 150px);min-height:620px;border:0;display:block;}
+.emb{width:100%;height:calc(100vh - 150px);min-height:620px;border:0;display:block;transition:height .2s;}
 .st{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
 .st.a{background:rgba(199,242,112,.14);color:var(--lime);} .st.i{background:rgba(255,255,255,.06);color:var(--sub);}
 .st.s{background:rgba(52,227,227,.13);color:var(--cyan);} .st.r{background:rgba(167,139,250,.14);color:var(--purple);}
@@ -248,7 +248,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
   <!-- SEGUIDORES (dashboard existente embutida via iframe — fonte unica, nao mexer) -->
   <div class="panel" id="pn-seg">
     <div class="emb-head"><a class="emb-ext" href="https://cardo-jpg.github.io/patricia-dashboard/" target="_blank">abrir em nova aba &#8599;</a></div>
-    <div class="emb-wrap"><iframe class="emb" src="https://cardo-jpg.github.io/patricia-dashboard/" title="Dashboard de seguidores" loading="lazy"></iframe></div>
+    <div class="emb-wrap"><iframe id="segframe" class="emb" src="https://cardo-jpg.github.io/patricia-dashboard/" title="Dashboard de seguidores" onload="fitSeg()"></iframe></div>
   </div>
   <div class="panel" id="pn-sri"><p class="eyebrow">Funil · SRI (Vendas)</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">vendas do SRI</b> — checkout, vendas, faturamento e ROAS.</div></div>
 </div>
@@ -394,6 +394,9 @@ window.addEventListener('load',()=>{
 });
 setInterval(load,60000);
 window.addEventListener('resize',()=>{const b=document.querySelector('.tab.on');if(b)moveInk(b);const p=document.querySelector('#period .pbtn.on');if(p)moveP(p);});
+/* iframe de seguidores cresce até a altura do conteúdo (mesma origem) → sem barra interna */
+function fitSeg(){try{const f=document.getElementById('segframe');if(!f)return;const d=f.contentWindow.document;const h=Math.max(d.body.scrollHeight,d.documentElement.scrollHeight);if(h>200)f.style.height=(h+24)+'px';}catch(e){}}
+setInterval(fitSeg,1500);
 </script>
 </body>
 </html>
