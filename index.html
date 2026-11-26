@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Funis · Patrícia Vogtt / Abroader</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{
+  --bg:#0b1525; --card:#131f30; --card2:#182538; --border:#1e3045;
+  --purple:#a78bfa; --purple-d:#7c3aed; --pink:#f472b6; --cyan:#00c6ff;
+  --green:#00e5a0; --yellow:#ffd166; --red:#ff6b6b; --orange:#f97316; --blue:#60a5fa;
+  --text:#f0f4f8; --sub:#7a90a8; --sub2:#3d5472; --grid:rgba(30,48,69,0.7);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:60px;}
+header{background:linear-gradient(135deg,#0b1525,#1a0f33);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.h-logo{display:flex;align-items:center;gap:13px;}
+.h-mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;box-shadow:0 4px 14px rgba(167,139,250,.35);}
+.h-name{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+.h-name span{background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.h-tag{font-size:10px;font-weight:800;background:var(--purple);color:#fff;border-radius:5px;padding:2px 8px;letter-spacing:.06em;margin-left:9px;vertical-align:middle;}
+.h-sub{font-size:11px;color:var(--sub);margin-top:3px;}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(167,139,250,.08);border:1px solid var(--purple);border-radius:20px;padding:5px 13px;font-size:11px;color:var(--purple);}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--pink);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.tabs{background:#0c1828;border-bottom:1px solid var(--border);padding:0 32px;display:flex;gap:2px;overflow-x:auto;}
+.tab-btn{padding:13px 18px;font-size:13px;font-weight:600;color:var(--sub);cursor:pointer;border:none;border-bottom:2px solid transparent;background:none;white-space:nowrap;transition:all .2s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--purple);border-bottom-color:var(--pink);}
+.tab-panel{display:none;} .tab-panel.active{display:block;}
+.container{max-width:1440px;margin:0 auto;padding:26px 32px;}
+.sec{font-size:11px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin:26px 0 14px;}
+.sec:first-child{margin-top:4px;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:8px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:15px 17px;border-top:2px solid var(--purple);}
+.kpi.p{border-top-color:var(--pink);} .kpi.c{border-top-color:var(--cyan);} .kpi.g{border-top-color:var(--green);}
+.kpi.o{border-top-color:var(--orange);} .kpi.y{border-top-color:var(--yellow);} .kpi.b{border-top-color:var(--blue);}
+.kpi-lbl{font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;}
+.kpi-val{font-size:24px;font-weight:800;line-height:1.05;}
+.kpi-note{font-size:10px;color:var(--sub);margin-top:5px;}
+.cv{color:var(--purple);} .cp{color:var(--pink);} .cc{color:var(--cyan);} .cg{color:var(--green);} .co{color:var(--orange);} .cy{color:var(--yellow);} .cb{color:var(--blue);} .cw{color:var(--text);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px;}
+.row2.wide{grid-template-columns:2fr 1fr;}
+@media(max-width:900px){.row2,.row2.wide{grid-template-columns:1fr;}}
+.box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:19px 21px;}
+.box-ttl{font-size:13px;font-weight:700;margin-bottom:2px;}
+.box-sub{font-size:11px;color:var(--sub);margin-bottom:15px;}
+.wrap{position:relative;} .h240{height:240px;} .h260{height:260px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--card2);font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px;padding:10px 14px;text-align:left;white-space:nowrap;}
+th.r,td.r{text-align:right;}
+td{padding:10px 14px;border-top:1px solid var(--border);white-space:nowrap;}
+tbody tr:hover td{background:rgba(167,139,250,.05);}
+tfoot td{font-weight:800;border-top:2px solid var(--border);}
+.funil-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:8px;vertical-align:middle;}
+.soon{background:var(--card);border:1px dashed var(--sub2);border-radius:12px;padding:40px 24px;text-align:center;color:var(--sub);font-size:13px;}
+.soon b{color:var(--purple);}
+.note{text-align:center;font-size:12px;color:var(--sub);margin-top:22px;}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.pill-roas{background:rgba(0,229,160,.1);color:var(--green);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo">
+    <div class="h-mark">PV</div>
+    <div>
+      <div class="h-name"><span>Patrícia Vogtt</span> · Abroader<span class="h-tag">FUNIS</span></div>
+      <div class="h-sub" id="h-sub">Painel de funis de aquisição e vendas</div>
+    </div>
+  </div>
+  <span class="badge"><span class="dot"></span> em construção</span>
+</header>
+
+<div class="tabs" id="tabs">
+  <button class="tab-btn active" onclick="tab('geral',this)">Geral</button>
+  <button class="tab-btn" onclick="tab('ebook',this)">Ebook Renda Extra</button>
+  <button class="tab-btn" onclick="tab('sri',this)">SRI · Vendas</button>
+  <button class="tab-btn" onclick="tab('instagram',this)">Instagram</button>
+  <button class="tab-btn" onclick="tab('youtube',this)">YouTube</button>
+  <button class="tab-btn" onclick="tab('substack',this)">Substack</button>
+</div>
+
+<!-- GERAL -->
+<div id="p-geral" class="tab-panel active">
+  <div class="container">
+    <p class="sec">Visão Geral · Todos os Funis</p>
+    <div class="kpi-row">
+      <div class="kpi"><p class="kpi-lbl">Investido (período)</p><p class="kpi-val cv" id="k-inv">—</p><p class="kpi-note">Tráfego pago, todos os funis</p></div>
+      <div class="kpi p"><p class="kpi-lbl">Faturamento</p><p class="kpi-val cp" id="k-fat">—</p><p class="kpi-note">Vendas atribuídas</p></div>
+      <div class="kpi g"><p class="kpi-lbl">ROAS Geral</p><p class="kpi-val cg" id="k-roas">—</p><p class="kpi-note">Faturamento ÷ Investido</p></div>
+      <div class="kpi c"><p class="kpi-lbl">Leads</p><p class="kpi-val cc" id="k-leads">—</p><p class="kpi-note">Captados no período</p></div>
+      <div class="kpi y"><p class="kpi-lbl">CPL médio</p><p class="kpi-val cy" id="k-cpl">—</p><p class="kpi-note">Custo por lead</p></div>
+      <div class="kpi b"><p class="kpi-lbl">Seguidores</p><p class="kpi-val cb" id="k-seg">—</p><p class="kpi-note">Novos no período</p></div>
+    </div>
+
+    <div class="row2 wide">
+      <div class="box">
+        <p class="box-ttl">Investimento × Faturamento por mês</p>
+        <p class="box-sub">Evolução dos funis ao longo do ano</p>
+        <div class="wrap h260"><canvas id="c-mes"></canvas></div>
+      </div>
+      <div class="box">
+        <p class="box-ttl">Participação no investimento</p>
+        <p class="box-sub">% por funil</p>
+        <div class="wrap h260"><canvas id="c-share"></canvas></div>
+      </div>
+    </div>
+
+    <p class="sec">Comparativo por Funil</p>
+    <div class="box" style="padding:0;overflow:hidden">
+      <table>
+        <thead><tr>
+          <th>Funil</th><th>Origem / Tag</th>
+          <th class="r">Investido</th><th class="r">Faturamento</th><th class="r">ROAS</th>
+          <th class="r">Leads</th><th class="r">CPL</th>
+        </tr></thead>
+        <tbody id="geral-tbody"></tbody>
+        <tfoot id="geral-tfoot"></tfoot>
+      </table>
+    </div>
+    <p class="note" id="geral-note">Conectando fonte de dados…</p>
+  </div>
+</div>
+
+<!-- Funis (shells) -->
+<div id="p-ebook" class="tab-panel"><div class="container"><p class="sec">Funil · Ebook Renda Extra em Dólar</p><div class="soon">Funil de <b>captação pelo Ebook</b> (tag <b>abroader-ads-ebook-rendaextraemdolar</b>).<br>KPIs de investido · leads · CPL · taxa de conversão e evolução diária entram aqui assim que você confirmar a fonte de dados.</div></div></div>
+<div id="p-sri" class="tab-panel"><div class="container"><p class="sec">Funil · SRI (Vendas)</p><div class="soon">Funil de <b>vendas do SRI</b> — investido, checkout, vendas, faturamento e ROAS.<br>Liga na planilha de vendas do SRI + Hotmart quando você apontar a fonte.</div></div></div>
+<div id="p-instagram" class="tab-panel"><div class="container"><p class="sec">Funil · Instagram (Pati + Abroader)</p><div class="soon">Funil de <b>Instagram</b> — @patriciavogtt e @segunda.renda: seguidores, posts impulsionados, CPS e engajamento.<br>Reaproveita a fonte da dashboard de seguidores da Pati.</div></div></div>
+<div id="p-youtube" class="tab-panel"><div class="container"><p class="sec">Funil · YouTube</p><div class="soon">Funil de <b>YouTube</b> (tag <b>abroader-youtube-pati</b>) — ainda sem tráfego; estrutura pronta pra quando começar.</div></div></div>
+<div id="p-substack" class="tab-panel"><div class="container"><p class="sec">Funil · Substack</p><div class="soon">Funil de <b>Substack</b> (tag <b>abroader-substack</b>) — lista de e-mail: novos assinantes, origem e conversão.</div></div></div>
+
+<p class="note">Painel de funis · Patrícia Vogtt / Abroader · identidade visual da marca · dados via Google Sheets</p>
+
+<script>
+const C={purple:'#a78bfa',pink:'#f472b6',cyan:'#00c6ff',green:'#00e5a0',yellow:'#ffd166',orange:'#f97316',blue:'#60a5fa',sub:'#7a90a8',grid:'rgba(30,48,69,0.7)'};
+const PAL=[C.purple,C.pink,C.cyan,C.green,C.orange,C.yellow,C.blue];
+Chart.defaults.color=C.sub; Chart.defaults.font.family='Inter';
+function tab(name,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const pn=document.getElementById('p-'+name); if(pn)pn.classList.add('active'); if(btn)btn.classList.add('active');
+}
+function fmtR(v){return 'R$ '+(v||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fmtN(v){return (v||0).toLocaleString('pt-BR');}
+
+/* ===== FUNIS (origens da Pati) — rótulo + cor + tag ===== */
+const FUNIS=[
+  {nome:'Ebook Renda Extra em Dólar',tag:'abroader-ads-ebook-rendaextraemdolar',cor:C.purple},
+  {nome:'Instagram Pati',tag:'abroader-instagram-pati',cor:C.pink},
+  {nome:'Instagram Abroader',tag:'abroader-instagram-abroader',cor:C.cyan},
+  {nome:'YouTube',tag:'abroader-youtube-pati',cor:C.orange},
+  {nome:'Substack',tag:'abroader-substack',cor:C.green},
+  {nome:'Lista de espera',tag:'abroader-sri-listadeespera',cor:C.yellow},
+];
+
+/* Placeholder de estrutura — a fonte real (planilha de estratégia / Meta) é conectada no próximo passo. */
+function renderGeral(){
+  const tb=document.getElementById('geral-tbody'); tb.innerHTML='';
+  FUNIS.forEach(f=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><span class="funil-dot" style="background:${f.cor}"></span>${f.nome}</td>`+
+      `<td style="color:var(--sub);font-size:12px">${f.tag}</td>`+
+      `<td class="r">—</td><td class="r">—</td><td class="r"><span class="pill pill-roas">—</span></td><td class="r">—</td><td class="r">—</td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById('geral-tfoot').innerHTML=`<tr><td>TOTAL</td><td></td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>`;
+  // gráficos de exemplo (vazios até conectar)
+  new Chart(document.getElementById('c-mes'),{type:'bar',
+    data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+      datasets:[{label:'Investido',data:[],backgroundColor:C.purple,borderRadius:4},
+               {label:'Faturamento',data:[],backgroundColor:C.pink,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},
+      scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid}}}}});
+  new Chart(document.getElementById('c-share'),{type:'doughnut',
+    data:{labels:FUNIS.map(f=>f.nome),datasets:[{data:FUNIS.map(()=>1),backgroundColor:PAL,borderColor:'#131f30',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:7,font:{size:10}}}}}});
+  document.getElementById('geral-note').innerHTML='⚙️ Estrutura pronta — <b style="color:var(--purple)">aguardando você confirmar os funis e a fonte de dados</b> pra ligar os números reais.';
+}
+renderGeral();
+</script>
+</body>
+</html>
