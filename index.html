@@ -248,14 +248,14 @@ function renderKPIs(){
   set('k-cpl',T.leads>0?fmtR(T.inv/T.leads):'—');
 }
 /* ===== FONTE (Apps Script Web App — lê a planilha privada AO VIVO, via JSONP) ===== */
-const WEBAPP_URL=''; // <<< cole aqui a URL /exec do Apps Script (código em apps-script-funis.gs)
+const WEBAPP_URL='https://script.google.com/macros/s/AKfycbwx2-311hkO4f3nJGOKSuyXy_r9UN7gjFjbCdGuBJp237sryAirDsvLH0aYVLMi7IGB/exec';
 function jsonp(url){return new Promise((res,rej)=>{const cb='__fn'+Math.random().toString(36).slice(2);window[cb]=d=>{res(d);try{delete window[cb];s.remove();}catch(e){}};const s=document.createElement('script');s.onerror=()=>rej(new Error('rede'));s.src=url+(url.indexOf('?')<0?'?':'&')+'callback='+cb+'&_='+Date.now();document.body.appendChild(s);});}
 async function loadFunis(){
   if(WEBAPP_URL){
     try{
       const d=await jsonp(WEBAPP_URL);
       if(d.erro)throw new Error(d.erro);
-      (d.funis||[]).forEach((f,i)=>{if(FUNIS[i]){FUNIS[i].inv=f.inv;FUNIS[i].fat=f.fat;FUNIS[i].leads=f.leads;}});
+      (d.funis||[]).forEach(f=>{const nf=(f.nome||'').toLowerCase().trim();const t=FUNIS.find(x=>{const nx=x.nome.toLowerCase().trim();return nx===nf||nx.indexOf(nf)>=0||nf.indexOf(nx)>=0;});if(t){t.inv=f.inv;t.fat=f.fat;t.leads=f.leads;}});
       document.getElementById('h-sub').textContent='Lê a planilha ao vivo · atualizado '+new Date(d.atualizado).toLocaleString('pt-BR');
       document.getElementById('geral-note').textContent='';
     }catch(e){document.getElementById('geral-note').innerHTML='⚠️ Não consegui ler a fonte ('+e.message+'). Confere a URL /exec do Apps Script.';}
