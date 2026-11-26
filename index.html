@@ -131,6 +131,10 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 .mform{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
 .mform .full{grid-column:1/-1;}
 .ebtool{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;}
+.emb-ext{font-size:11px;font-weight:600;color:var(--purple);text-decoration:none;margin-left:10px;}
+.emb-ext:hover{text-decoration:underline;}
+.emb-wrap{border:1px solid rgba(167,139,250,.18);border-radius:16px;overflow:hidden;background:#0b1525;box-shadow:0 20px 50px rgba(0,0,0,.35);}
+.emb{width:100%;height:calc(100vh - 230px);min-height:760px;border:0;display:block;}
 .st{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
 .st.a{background:rgba(199,242,112,.14);color:var(--lime);} .st.i{background:rgba(255,255,255,.06);color:var(--sub);}
 .st.s{background:rgba(52,227,227,.13);color:var(--cyan);} .st.r{background:rgba(167,139,250,.14);color:var(--purple);}
@@ -204,7 +208,6 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
   <div class="tabs rv" id="tabs"><span class="tab-ink" id="tab-ink"></span>
     <button class="tab on" data-p="geral">Geral</button>
     <button class="tab" data-p="seg">Seguidores</button>
-    <button class="tab" data-p="ebook">Ebook</button>
     <button class="tab" data-p="sri">SRI · Vendas</button>
   </div>
 
@@ -240,85 +243,12 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
     <p class="foot-note" id="note">…</p>
   </div>
 
-  <!-- SEGUIDORES -->
+  <!-- SEGUIDORES (dashboard existente embutida via iframe — fonte unica, nao mexer) -->
   <div class="panel" id="pn-seg">
-    <div class="seg-bar rv">
-      <div class="vtoggle" id="seg-toggle"><button class="on" data-b="pati">Patrícia</button><button data-b="abroader">Abroader</button></div>
-      <div class="drange"><span class="p-lbl">De</span><input type="date" id="dq-de"><span class="p-lbl">até</span><input type="date" id="dq-ate"></div>
-    </div>
-    <div class="period rv" id="seg-months" style="margin-bottom:14px"></div>
-    <p class="eyebrow rv">Seguidores · <span id="seg-brand">Patrícia</span></p>
-    <div class="kgrid rv">
-      <div class="kc" style="border-top:2px solid var(--amber)"><div class="l">Investimento</div><div class="v" id="s-inv">—</div><div class="note" id="s-inv-n">período selecionado</div></div>
-      <div class="kc" style="border-top:2px solid var(--purple)"><div class="l">Novos seguidores</div><div class="v" style="color:var(--purple)" id="s-seg">—</div><div class="note">total do período</div></div>
-      <div class="kc" style="border-top:2px solid var(--pink)"><div class="l">CPS médio</div><div class="v" style="color:var(--pink)" id="s-cps">—</div><div class="note">custo por seguidor</div></div>
-      <div class="kc" style="border-top:2px solid var(--cyan)"><div class="l">Cliques</div><div class="v" style="color:var(--cyan)" id="s-clk">—</div><div class="note" id="s-cpc-n">CPC —</div></div>
-      <div class="kc" style="border-top:2px solid var(--lime)"><div class="l">Impressões</div><div class="v" id="s-imp">—</div><div class="note" id="s-cpm-n">CPM —</div></div>
-    </div>
-    <div class="charts rv">
-      <div class="box"><h3>Novos seguidores por dia</h3><p>barras = seguidores ganhos · linha = CPS</p><div class="cv" style="height:280px"><canvas id="c-seg"></canvas></div></div>
-      <div class="box"><h3>Investimento diário</h3><p>barras = investido · linha = impressões</p><div class="cv" style="height:280px"><canvas id="c-seginv"></canvas></div></div>
-    </div>
-    <p class="eyebrow rv">Rastreamento de seguidores · posts</p>
-    <div class="box rv" style="padding:0;overflow:hidden">
-      <div class="tbl-top"><span class="tbl-ttl">Posts impulsionados</span><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div class="pfilter" id="pfilter"></div><button class="mbtn" onclick="openPostsModal()">✏️ Gerenciar posts</button></div></div>
-      <div style="overflow-x:auto"><table class="dtable" id="posts-tbl"></table></div>
-    </div>
-    <p class="eyebrow rv">Detalhamento por dia</p>
-    <div class="box rv" style="padding:0;overflow:hidden"><div style="overflow-x:auto;max-height:520px"><table class="dtable" id="seg-daily"></table></div></div>
-    <p class="foot-note" id="seg-note"></p>
-  </div>
-
-  <!-- EBOOK -->
-  <div class="panel" id="pn-ebook">
-    <p class="eyebrow rv">Ebook Renda Extra em Dólar · captação</p>
-    <div class="ebtool rv">
-      <div class="pfilter" id="ebdate"><button class="on" data-n="0" onclick="ebPreset(0,this)">Total</button><button data-n="7" onclick="ebPreset(7,this)">7 dias</button><button data-n="14" onclick="ebPreset(14,this)">14 dias</button><button data-n="30" onclick="ebPreset(30,this)">30 dias</button></div>
-      <div class="drange"><span class="p-lbl">De</span><input type="date" id="ebd-de"><span class="p-lbl">até</span><input type="date" id="ebd-ate"><button class="mbtn" style="padding:6px 11px;font-size:11px" onclick="ebCustom()">Aplicar</button></div>
-    </div>
-    <div class="kgrid rv">
-      <div class="kc" style="border-top:2px solid var(--amber)"><div class="l">Investido</div><div class="v" id="e-inv">—</div></div>
-      <div class="kc" style="border-top:2px solid var(--purple)"><div class="l">Leads</div><div class="v" style="color:var(--purple)" id="e-leads">—</div></div>
-      <div class="kc" style="border-top:2px solid var(--pink)"><div class="l">CPL</div><div class="v" style="color:var(--pink)" id="e-cpl">—</div></div>
-      <div class="kc" style="border-top:2px solid var(--cyan)"><div class="l">Visitas LP</div><div class="v" id="e-lp">—</div><div class="note" id="e-lp-n">lead/LP —</div></div>
-      <div class="kc" style="border-top:2px solid var(--lime)"><div class="l">Cliques</div><div class="v" style="color:var(--cyan)" id="e-clk">—</div><div class="note" id="e-ctr-n">CTR —</div></div>
-      <div class="kc" style="border-top:2px solid var(--purple)"><div class="l">Impressões</div><div class="v" id="e-imp">—</div></div>
-    </div>
-    <div class="box rv"><h3>Leads por dia</h3><p>barras = leads captados · linha = CPL</p><div class="cv" style="height:300px"><canvas id="c-eb"></canvas></div></div>
-    <p class="eyebrow rv">Por criativo</p>
-    <div class="box rv" style="padding:0;overflow:hidden">
-      <div class="tbl-top"><span class="tbl-ttl">Criativos · meta CPL ≤ R$ 1,50</span><div class="pfilter" id="ebfilter"></div></div>
-      <div style="overflow-x:auto;max-height:480px"><table class="dtable" id="eb-tbl"></table></div>
-    </div>
-    <p class="foot-note" id="eb-note"></p>
+    <p class="eyebrow">Seguidores · Patricia + Abroader · Organico · Ebook <a class="emb-ext" href="https://cardo-jpg.github.io/patricia-dashboard/" target="_blank">abrir em tela cheia &#8599;</a></p>
+    <div class="emb-wrap"><iframe class="emb" src="https://cardo-jpg.github.io/patricia-dashboard/" title="Dashboard de seguidores" loading="lazy"></iframe></div>
   </div>
   <div class="panel" id="pn-sri"><p class="eyebrow">Funil · SRI (Vendas)</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">vendas do SRI</b> — checkout, vendas, faturamento e ROAS.</div></div>
-</div>
-
-<!-- MODAL: Gerenciar posts -->
-<div class="modal-bg" id="posts-modal" onclick="if(event.target===this)closePostsModal()">
-  <div class="modal">
-    <h3>✏️ Gerenciar posts · <span id="pm-brand">Patrícia</span></h3>
-    <p class="msub">Edita direto aqui — salva sozinho no servidor (Sinapse). Clique no status pra alternar Ativo → Inativo → Subir → Reserva.</p>
-    <div id="post-list"></div>
-    <hr>
-    <p class="seclbl">Adicionar post</p>
-    <label style="display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Nome do post<input class="minp" id="f-nome" placeholder="Ex: CARROSSEL - Renda extra que eu faria…"></label>
-    <label style="display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Link do Instagram<input class="minp" id="f-link" placeholder="https://www.instagram.com/p/…"></label>
-    <div class="mform">
-      <label>Investimento (R$)<input class="minp" id="f-inv" type="number" step="0.01" min="0" placeholder="0,00"></label>
-      <label>Seguidores<input class="minp" id="f-seg" type="number" min="0" placeholder="0"></label>
-      <label>Valor diário (R$)<input class="minp" id="f-dia" type="number" step="0.01" min="0" placeholder="0"></label>
-      <label>Status<select class="minp" id="f-status"><option value="ativo">Ativo</option><option value="inativo">Inativo</option><option value="subir">Subir</option><option value="reserva">Reserva</option></select></label>
-      <label class="full">Observação<input class="minp" id="f-obs" placeholder="Ex: bloqueado pelo Meta, aguardando revisão…"></label>
-    </div>
-    <button class="mbtn" onclick="draftAddPost()" style="width:100%;justify-content:center">+ Adicionar post</button>
-    <hr>
-    <div style="display:flex;align-items:center;gap:12px">
-      <span id="p-save" style="flex:1;font-size:12px;font-weight:700;color:var(--lime)">✓ salvo</span>
-      <button class="mbtn" onclick="closePostsModal()">✓ Fechar</button>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -361,8 +291,6 @@ function moveInk(btn){const ink=$('tab-ink');ink.style.left=btn.offsetLeft+'px';
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');moveInk(b);
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));$('pn-'+b.dataset.p).classList.add('on');
-  if(b.dataset.p==='seg'&&!_segLoaded){_segLoaded=true;loadSeg();}
-  if(b.dataset.p==='ebook'&&!_ebLoaded){_ebLoaded=true;loadEbook();}
 }));
 document.querySelectorAll('.vtoggle button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.vtoggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
@@ -455,209 +383,6 @@ async function load(){
   }catch(e){$('live-txt').textContent='sem conexão';$('note').innerHTML='⚠️ '+e.message;}
   buildPeriod();renderHero(_first);renderCards();renderEsp();renderCharts();_first=false;
 }
-/* ===== HUB: Seguidores (Pati+Abroader) + Posts + Ebook ===== */
-var _segLoaded=false,_ebLoaded=false,SEG_BRAND='pati',SEG_RAW={},POSTS={},DQ={de:'',ate:''},PF='todos',SEGSORT={k:'dt',d:-1},EB_RAW=null;
-const SEG_SHEET='1FqaWfL76VcYKeYGVbqO7qwi3EUqwj7YaLEL23Dlqgd8',SEGTAB={pati:'Dados',abroader:'Abroader'};
-const EB_SHEET='1MNmYN39x8FB8BGBQocZGAL8kDGQ4WZ5B7uAy5KazJ1c',POSTS_API='https://sinapse.cardomarketing.com.br/api/hire-posts';
-const gvt=id=>`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
-function csv(t){const R=[];let r=[],f='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}else{if(c==='"')q=true;else if(c===','){r.push(f);f='';}else if(c==='\n'){r.push(f);R.push(r);r=[];f='';}else if(c!=='\r')f+=c;}}if(f.length||r.length){r.push(f);R.push(r);}return R;}
-function money(s){s=String(s||'').replace(/R\$/gi,'').replace(/\s/g,'').trim();if(!s||s==='-')return 0;if(s.indexOf(',')>=0)s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)||0;}
-function pint(s){return parseInt(String(s||'').replace(/\./g,'').replace(/[^\d-]/g,''))||0;}
-function pmd(s){const m=String(s||'').match(/(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/);if(!m)return null;return{d:+m[1],mo:+m[2],y:m[3]?(+m[3]<100?2000+ +m[3]:+m[3]):null};}
-const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const brl2=v=>v?'R$ '+(+v).toFixed(2).replace('.',','):'—';
-const d2=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
-const kfmt=v=>(+v>=1000?(+v/1000).toFixed(1)+'k':''+Math.round(+v));
-function dualChart(id,labels,bd,bl,bc,ld,ll,lc,lfmt){
-  if(ch[id])ch[id].destroy();
-  ch[id]=new Chart($('c-'+id),{data:{labels,datasets:[
-    {type:'bar',label:bl,data:bd,backgroundColor:bc,borderRadius:4,yAxisID:'y',order:2},
-    {type:'line',label:ll,data:ld,borderColor:lc,backgroundColor:lc,pointRadius:2,tension:.35,yAxisID:'y2',order:1,spanGaps:true}]},
-    options:{responsive:true,maintainAspectRatio:false,animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{position:'top',labels:{boxWidth:9,boxHeight:9,usePointStyle:true,padding:12}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:15,autoSkip:true}},y:{position:'left',grid:{color:C.grid},border:{display:false}},y2:{position:'right',grid:{drawOnChartArea:false},border:{display:false},ticks:{callback:lfmt}}}}});
-}
-/* --- Seguidores --- */
-async function loadSeg(){
-  try{
-    if(!SEG_RAW[SEG_BRAND]){
-      const r=await fetch(`${gvt(SEG_SHEET)}&sheet=${encodeURIComponent(SEGTAB[SEG_BRAND])}&_=${Date.now()}`,{cache:'no-cache'});
-      const rows=csv(await r.text()),H=(rows[0]||[]).map(h=>h.trim().toLowerCase());
-      const ix=n=>H.findIndex(h=>h.indexOf(n)>=0);
-      const iD=ix('data'),iS=ix('novos seguidor'),iI=ix('investimento'),iC=ix('cliques'),iM=ix('impress'),iCps=ix('custo por novos'),iCpc=ix('cpc'),iCpm=ix('cpm');
-      const out=[];let yr=2026,pm=0;
-      for(let k=1;k<rows.length;k++){const row=rows[k];const p=pmd(iD>=0?row[iD]:'');if(!p)continue;
-        let y=p.y;if(y==null){if(p.mo<pm)yr++;y=yr;}else yr=y;pm=p.mo;
-        const dt=new Date(y,p.mo-1,p.d),seg=pint(row[iS]),inv=money(row[iI]);if(seg===0&&inv===0)continue;
-        out.push({dt,seg,inv,clk:iC>=0?pint(row[iC]):0,imp:iM>=0?pint(row[iM]):0,cps:(iCps>=0?money(row[iCps]):0)||(seg>0?inv/seg:0),cpc:iCpc>=0?money(row[iCpc]):0,cpm:iCpm>=0?money(row[iCpm]):0});
-      }
-      out.sort((a,b)=>a.dt-b.dt);SEG_RAW[SEG_BRAND]=out;
-    }
-  }catch(e){$('seg-note').innerHTML='⚠️ não li os seguidores: '+e.message;}
-  buildSegMonths();renderSeg();loadPosts();
-}
-function buildSegMonths(){
-  const all=SEG_RAW[SEG_BRAND]||[],box=$('seg-months'),ms=[],seen={};
-  all.forEach(r=>{const k=r.dt.getFullYear()+'-'+r.dt.getMonth();if(!seen[k]){seen[k]=1;ms.push({y:r.dt.getFullYear(),m:r.dt.getMonth(),k});}});
-  const cur=curKey();box.innerHTML='<span class="p-ink" id="sp-ink"></span><span class="p-lbl">Período</span>';
-  const mk=(t,v)=>{const b=document.createElement('button');b.className='pbtn'+(cur===v?' on':'');b.textContent=t;b.onclick=()=>pickMonth(v,b);box.appendChild(b);};
-  mk('Tudo','all');ms.forEach(o=>mk(MES[o.m]+'/'+String(o.y).slice(2),o.k));
-  const on=box.querySelector('.pbtn.on')||box.querySelector('.pbtn');requestAnimationFrame(()=>{if(on){const k=$('sp-ink');k.style.left=on.offsetLeft+'px';k.style.width=on.offsetWidth+'px';}});
-}
-function curKey(){if(!DQ.de||!DQ.ate)return 'all';const a=new Date(DQ.de+'T00:00'),b=new Date(DQ.ate+'T00:00');if(a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===1&&b.getDate()===new Date(b.getFullYear(),b.getMonth()+1,0).getDate())return a.getFullYear()+'-'+a.getMonth();return '';}
-function pickMonth(v,btn){
-  document.querySelectorAll('#seg-months .pbtn').forEach(x=>x.classList.remove('on'));btn.classList.add('on');
-  const k=$('sp-ink');k.style.left=btn.offsetLeft+'px';k.style.width=btn.offsetWidth+'px';
-  if(v==='all'){const all=SEG_RAW[SEG_BRAND]||[];if(all.length){DQ.de=iso(all[0].dt);DQ.ate=iso(all[all.length-1].dt);}else DQ={de:'',ate:''};}
-  else{const[y,m]=v.split('-').map(Number);DQ.de=iso(new Date(y,m,1));DQ.ate=iso(new Date(y,m+1,0));}
-  $('dq-de').value=DQ.de;$('dq-ate').value=DQ.ate;renderSeg();
-}
-function renderSeg(){
-  const all=SEG_RAW[SEG_BRAND]||[];
-  if(all.length&&!DQ.de&&!DQ.ate){DQ.de=iso(all[0].dt);DQ.ate=iso(all[all.length-1].dt);$('dq-de').value=DQ.de;$('dq-ate').value=DQ.ate;}
-  const de=DQ.de?new Date(DQ.de+'T00:00'):null,at=DQ.ate?new Date(DQ.ate+'T23:59'):null;
-  const f=all.filter(r=>(!de||r.dt>=de)&&(!at||r.dt<=at));
-  const T=f.reduce((a,r)=>{a.seg+=r.seg;a.inv+=r.inv;a.clk+=r.clk;a.imp+=r.imp;return a;},{seg:0,inv:0,clk:0,imp:0});
-  $('s-inv').textContent=T.inv?fmtR(T.inv):'—';$('s-seg').textContent=T.seg?'+'+fmtN(T.seg):'—';
-  $('s-cps').textContent=brl2(T.seg>0?T.inv/T.seg:0);$('s-clk').textContent=T.clk?fmtN(T.clk):'—';$('s-imp').textContent=T.imp?fmtN(T.imp):'—';
-  $('s-cpc-n').textContent='CPC '+brl2(T.clk>0?T.inv/T.clk:0);$('s-cpm-n').textContent='CPM '+brl2(T.imp>0?T.inv/T.imp*1000:0);
-  const lbl=f.map(r=>d2(r.dt));
-  dualChart('seg',lbl,f.map(r=>r.seg),'Novos seguidores','rgba(167,139,250,.55)',f.map(r=>r.cps||null),'CPS',C.pink,v=>'R$'+(+v).toFixed(2).replace('.',','));
-  dualChart('seginv',lbl,f.map(r=>r.inv),'Investimento','rgba(52,227,227,.5)',f.map(r=>r.imp||null),'Impressões',C.amber,kfmt);
-  renderSegDaily(f);
-  $('seg-note').innerHTML=f.length?`${f.length} dias · fonte: planilha [PATI] Seguidores (privada)`:'Sem dados no período';
-}
-function renderSegDaily(f){
-  const cols=[['dt','Data','l'],['seg','Novos seg.',''],['inv','Investimento',''],['cps','CPS',''],['clk','Cliques',''],['cpc','CPC',''],['imp','Impressões',''],['cpm','CPM','']];
-  const arr=f.slice().sort((a,b)=>{const k=SEGSORT.k;let av=k==='dt'?a.dt.getTime():a[k],bv=k==='dt'?b.dt.getTime():b[k];return (av-bv)*SEGSORT.d;});
-  let h='<thead><tr>'+cols.map(c=>`<th class="${c[2]}" data-k="${c[0]}">${c[1]}${SEGSORT.k===c[0]?(SEGSORT.d<0?' ↓':' ↑'):''}</th>`).join('')+'</tr></thead><tbody>';
-  arr.forEach(r=>{h+=`<tr><td class="l">${d2(r.dt)}</td><td style="color:var(--purple)">${r.seg?'+'+fmtN(r.seg):'—'}</td><td style="color:var(--amber)">${r.inv?fmtR(r.inv):'—'}</td><td style="color:var(--pink)">${brl2(r.cps)}</td><td>${r.clk?fmtN(r.clk):'—'}</td><td>${brl2(r.cpc)}</td><td>${r.imp?fmtN(r.imp):'—'}</td><td>${brl2(r.cpm)}</td></tr>`;});
-  $('seg-daily').innerHTML=h+'</tbody>';
-  $('seg-daily').querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(SEGSORT.k===k)SEGSORT.d=-SEGSORT.d;else SEGSORT={k,d:-1};renderSegDaily(f);});
-}
-/* --- Posts (Sinapse) — leitura + gestão (add/editar/status) com auto-save --- */
-const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const PSTAT={ativo:['a','● Ativo'],inativo:['i','⏸ Inativo'],subir:['s','📤 Subir'],reserva:['r','🗂 Reserva']};
-const PCYCLE={ativo:'inativo',inativo:'subir',subir:'reserva',reserva:'ativo'};
-let _psaveT=null;
-function postsArr(){return POSTS[SEG_BRAND]||(POSTS[SEG_BRAND]=[]);}
-async function loadPosts(){
-  try{
-    const r=await fetch(POSTS_API+'?profile='+SEG_BRAND+'&_='+Date.now(),{cache:'no-cache'});const j=await r.json();
-    if(j&&Array.isArray(j.posts)){POSTS[SEG_BRAND]=j.posts.map(x=>({nome:x.nome||'',link:x.link||'',inv:+x.inv||0,dia:+x.dia||0,saldo:+x.saldo||0,status:x.status||'ativo',obs:x.obs||''}));try{localStorage.setItem('pati_posts_'+SEG_BRAND,JSON.stringify(POSTS[SEG_BRAND]));}catch(_){}}
-    else throw 0;
-  }catch(e){try{POSTS[SEG_BRAND]=JSON.parse(localStorage.getItem('pati_posts_'+SEG_BRAND)||'[]');}catch(_){POSTS[SEG_BRAND]=[];}}
-  renderPosts();
-}
-function savePosts(){try{localStorage.setItem('pati_posts_'+SEG_BRAND,JSON.stringify(postsArr()));}catch(e){}
-  showPSave('salvando');clearTimeout(_psaveT);_psaveT=setTimeout(()=>cloudSavePosts(SEG_BRAND,postsArr().slice(),0),700);}
-async function cloudSavePosts(profile,arr,att){
-  try{const r=await fetch(POSTS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile,posts:arr})});const j=await r.json();if(j&&j.ok)showPSave('salvo');else throw 0;}
-  catch(e){if(att<5)setTimeout(()=>cloudSavePosts(profile,arr,att+1),1500);else showPSave('erro');}
-}
-function showPSave(s){const el=$('p-save');if(!el)return;if(s==='salvando'){el.textContent='● salvando…';el.style.color='var(--amber)';}else if(s==='salvo'){el.textContent='✓ salvo';el.style.color='var(--lime)';}else{el.textContent='⚠ sem conexão — tentando de novo…';el.style.color='var(--rose)';}}
-function motivoInativo(p,ref){const inv=+p.inv||0,seg=+p.saldo||0,cps=seg>0?inv/seg:0;
-  if(inv>0&&seg===0)return `⏸ gastou ${fmtR(inv)} e não trouxe seguidor`;
-  if(inv<10&&seg<=1)return `⏸ teste curto · ${fmtR(inv)} em ${seg} seguidor${seg===1?'':'es'}`;
-  if(cps>0&&cps>=Math.max(ref*3,5))return `⏸ CPS alto · ${brl2(cps)}/seg${ref>0?` · ${Math.round(cps/ref)}× a média`:''}`;
-  if(cps>0)return `⏸ ${fmtR(inv)} · ${brl2(cps)}/seg`;
-  return '⏸ pausado';}
-function cyclePost(idx){const a=postsArr();if(!a[idx])return;a[idx].status=PCYCLE[a[idx].status||'ativo']||'ativo';renderPosts();savePosts();}
-function inlinePost(idx,field,val){const a=postsArr();if(!a[idx])return;a[idx][field]=field==='inv'?(parseFloat(val)||0):(parseInt(val)||0);savePosts();renderPosts();}
-function renderPosts(){
-  const all=postsArr();
-  const cnt={todos:all.length,ativo:0,inativo:0,subir:0,reserva:0};
-  all.forEach(p=>{const s=p.status||'ativo';if(cnt[s]!=null)cnt[s]++;});
-  const fb=$('pfilter');fb.innerHTML='';
-  [['todos','Todos'],['ativo','Ativos'],['inativo','Inativos'],['subir','Subir'],['reserva','Reserva']].forEach(([k,lb])=>{const b=document.createElement('button');b.className=PF===k?'on':'';b.textContent=lb+' ('+(cnt[k]||0)+')';b.onclick=()=>{PF=k;renderPosts();};fb.appendChild(b);});
-  let rI=0,rS=0;all.forEach(p=>{if((p.status||'ativo')==='ativo'){const s=+p.saldo||0;if(s>0){rI+=+p.inv||0;rS+=s;}}});const refCPS=rS>0?rI/rS:0;
-  const rowsF=all.map((p,idx)=>({p,idx})).filter(o=>PF==='todos'||(o.p.status||'ativo')===PF).sort((a,b)=>(b.p.saldo||0)-(a.p.saldo||0));
-  let h='<thead><tr><th class="l">Post</th><th class="l">Status</th><th>Seguidores</th><th>Investimento</th><th>CPS</th><th class="l">Link</th></tr></thead><tbody>';
-  if(!rowsF.length)h+='<tr><td class="l" colspan="6" style="color:var(--sub);padding:18px">Nenhum post neste filtro.</td></tr>';
-  rowsF.forEach(({p,idx})=>{const cps=p.saldo>0&&p.inv>0?p.inv/p.saldo:0;const stt=p.status||'ativo';const[cl,lb]=PSTAT[stt]||PSTAT.ativo;
-    const obs=p.obs?`<div class="pobs">${esc(p.obs)}</div>`:'';const mot=stt==='inativo'?`<div class="motivo">${motivoInativo(p,refCPS)}</div>`:'';
-    h+=`<tr><td class="l nm" title="${esc(p.nome||'')}">${esc(p.nome||'—')}${obs}${mot}</td>`+
-    `<td class="l"><span class="st ${cl} clk" title="Clique p/ alternar" onclick="cyclePost(${idx})">${lb}</span></td>`+
-    `<td><input class="iinp" type="number" min="0" value="${p.saldo||0}" onclick="this.select()" onchange="inlinePost(${idx},'saldo',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></td>`+
-    `<td><span class="iwrap"><i>R$</i><input class="iinp" type="number" min="0" step="0.01" value="${p.inv||0}" onclick="this.select()" onchange="inlinePost(${idx},'inv',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></span></td>`+
-    `<td style="color:var(--pink)">${brl2(cps)}</td>`+
-    `<td class="l">${p.link?`<a class="lnk" href="${p.link}" target="_blank">Ver ↗</a>`:'—'}</td></tr>`;});
-  $('posts-tbl').innerHTML=h+'</tbody>';
-}
-/* --- Modal gerenciar posts --- */
-function openPostsModal(){$('pm-brand').textContent=SEG_BRAND==='pati'?'Patrícia':'Abroader';renderPostList();$('posts-modal').classList.add('open');}
-function closePostsModal(){const n=$('f-nome').value.trim(),l=$('f-link').value.trim();if(n&&l)draftAddPost();$('posts-modal').classList.remove('open');}
-function renderPostList(){const a=postsArr();
-  $('post-list').innerHTML=a.length?a.map((p,i)=>{const stt=p.status||'ativo';const[cl,lb]=PSTAT[stt]||PSTAT.ativo;const nm=esc((p.nome||'').replace(/^(CARROSSEL|REELS?)\s*-\s*/i,''))||'(sem nome)';
-    return `<div class="pli"><div class="pli-top"><span class="pli-nm" title="${esc(p.nome||'')}">${nm}</span><span class="st ${cl} clk" title="Clique p/ alternar" onclick="draftTogglePost(${i})">${lb}</span><button class="xbtn" title="Remover" onclick="draftDelPost(${i})">✕</button></div>
-    <div class="pli-grid"><label>Investimento (R$)<input class="minp" type="number" step="0.01" min="0" value="${p.inv||''}" oninput="postsArr()[${i}].inv=parseFloat(this.value)||0;savePosts()"></label><label>Seguidores<input class="minp" type="number" min="0" value="${p.saldo||''}" oninput="postsArr()[${i}].saldo=parseInt(this.value)||0;savePosts()"></label></div>
-    <input class="minp" placeholder="Observação (opcional)…" value="${esc(p.obs||'')}" oninput="postsArr()[${i}].obs=this.value;savePosts()"></div>`;}).join(''):'<p class="pli-empty">Nenhum post cadastrado.</p>';}
-function draftTogglePost(i){const a=postsArr();if(!a[i])return;a[i].status=PCYCLE[a[i].status||'ativo']||'ativo';renderPostList();renderPosts();savePosts();}
-function draftDelPost(i){if(!confirm('Remover este post?'))return;postsArr().splice(i,1);renderPostList();renderPosts();savePosts();}
-function draftAddPost(){const nome=$('f-nome').value.trim(),link=$('f-link').value.trim();if(!nome||!link){alert('Preencha pelo menos nome e link.');return;}
-  postsArr().push({nome,link,inv:parseFloat($('f-inv').value)||0,saldo:parseInt($('f-seg').value)||0,dia:parseFloat($('f-dia').value)||0,status:$('f-status').value||'ativo',obs:$('f-obs').value.trim()});
-  ['f-nome','f-link','f-inv','f-seg','f-dia','f-obs'].forEach(id=>$(id).value='');$('f-status').value='ativo';
-  renderPostList();renderPosts();savePosts();}
-/* --- Ebook (paridade: meta, status do anúncio, filtros, presets de data) --- */
-const META_CPL=1.50;
-let _ebApF='todos',_ebRange=null;
-const EBST={ACTIVE:['a','● Ativo'],PAUSED:['s','⏸ Pausado'],WITH_ISSUES:['rose','⚠ Problema'],DISAPPROVED:['rose','✕ Reprovado']};
-function ebCri(code){code=(code||'').trim();if(!code)return 'Outros';return code.replace(/^AD\d+_(IMG_|VID_)/,'').replace(/_/g,' ');}
-async function loadEbook(){
-  try{
-    const r=await fetch(`${gvt(EB_SHEET)}&sheet=${encodeURIComponent('Facebook Ebook')}&_=${Date.now()}`,{cache:'no-cache'});
-    const rows=csv(await r.text()),H=(rows[0]||[]).map(h=>h.trim().toLowerCase());
-    const ix=n=>H.findIndex(h=>h.indexOf(n)>=0);
-    const iD=ix('date'),iCr=ix('criativo'),iP=ix('publico'),iI=ix('investido'),iM=ix('impress'),iC=ix('clique'),iL=ix('lead'),iV=ix('visual'),iU=ix('url'),iSt=ix('status');
-    const out=[];
-    for(let k=1;k<rows.length;k++){const row=rows[k];const p=pmd(iD>=0?row[iD]:'');if(!p)continue;const dt=new Date(p.y||2026,p.mo-1,p.d);
-      out.push({dt,cr:ebCri(iCr>=0?row[iCr]:''),url:iU>=0?(row[iU]||'').trim():'',status:iSt>=0?(row[iSt]||'').trim():'',inv:money(row[iI]),imp:iM>=0?pint(row[iM]):0,clk:iC>=0?pint(row[iC]):0,leads:iL>=0?pint(row[iL]):0,lp:iV>=0?pint(row[iV]):0});
-    }
-    out.sort((a,b)=>a.dt-b.dt);EB_RAW=out;
-    if(out.length){$('ebd-de').value=iso(out[0].dt);$('ebd-ate').value=iso(out[out.length-1].dt);}
-    $('eb-note').textContent='';
-  }catch(e){$('eb-note').innerHTML='⚠️ '+e.message;}
-  renderEbook();
-}
-function ebView(){const all=EB_RAW||[];
-  if(!_ebRange||_ebRange.n===0)return all;
-  if(_ebRange.n){let mx=null;all.forEach(r=>{if(!mx||r.dt>mx)mx=r.dt;});if(!mx)return all;const cut=new Date(mx);cut.setDate(cut.getDate()-(_ebRange.n-1));return all.filter(r=>r.dt>=cut&&r.dt<=mx);}
-  if(_ebRange.de)return all.filter(r=>r.dt>=_ebRange.de&&r.dt<=_ebRange.ate);
-  return all;}
-function ebPreset(n,btn){_ebRange={n};document.querySelectorAll('#ebdate button').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');renderEbook();}
-function ebCustom(){const s=$('ebd-de').value,e=$('ebd-ate').value;if(!s||!e){alert('Escolha as duas datas.');return;}let de=new Date(s+'T00:00'),at=new Date(e+'T23:59');if(de>at){const t=de;de=at;at=t;}_ebRange={de,ate:at};document.querySelectorAll('#ebdate button').forEach(b=>b.classList.remove('on'));renderEbook();}
-function editEbUrl(n){let o={};try{o=JSON.parse(localStorage.getItem('pati_eb_urls')||'{}');}catch(e){}const nv=prompt('Link do anúncio — '+n+':',o[n]||'');if(nv===null)return;if(nv.trim())o[n]=nv.trim();else delete o[n];try{localStorage.setItem('pati_eb_urls',JSON.stringify(o));}catch(e){}renderEbook();}
-function renderEbook(){
-  const rows=ebView();
-  const T=rows.reduce((a,r)=>{a.inv+=r.inv;a.imp+=r.imp;a.clk+=r.clk;a.leads+=r.leads;a.lp+=r.lp;return a;},{inv:0,imp:0,clk:0,leads:0,lp:0});
-  $('e-inv').textContent=T.inv?fmtR(T.inv):'—';$('e-leads').textContent=T.leads?fmtN(T.leads):'—';$('e-cpl').textContent=brl2(T.leads>0?T.inv/T.leads:0);
-  $('e-lp').textContent=T.lp?fmtN(T.lp):'—';$('e-clk').textContent=T.clk?fmtN(T.clk):'—';$('e-imp').textContent=T.imp?fmtN(T.imp):'—';
-  $('e-lp-n').textContent='lead/LP '+(T.lp>0?Math.round(T.leads/T.lp*100)+'%':'—');$('e-ctr-n').textContent='CTR '+(T.imp>0?(T.clk/T.imp*100).toFixed(2)+'%':'—');
-  const byd={};rows.forEach(r=>{const k=iso(r.dt);if(!byd[k])byd[k]={dt:r.dt,leads:0,inv:0};byd[k].leads+=r.leads;byd[k].inv+=r.inv;});
-  const days=Object.values(byd).sort((a,b)=>a.dt-b.dt);
-  dualChart('eb',days.map(d=>d2(d.dt)),days.map(d=>d.leads),'Leads','rgba(167,139,250,.55)',days.map(d=>d.leads>0?d.inv/d.leads:null),'CPL',C.pink,v=>'R$'+(+v).toFixed(2).replace('.',','));
-  let ovr={};try{ovr=JSON.parse(localStorage.getItem('pati_eb_urls')||'{}');}catch(e){}
-  const byc={};rows.slice().sort((a,b)=>a.dt-b.dt).forEach(r=>{const k=r.cr||'Outros';if(!byc[k])byc[k]={cr:k,inv:0,imp:0,clk:0,leads:0,url:'',status:''};const g=byc[k];g.inv+=r.inv;g.imp+=r.imp;g.clk+=r.clk;g.leads+=r.leads;if(r.url)g.url=r.url;if(r.status)g.status=r.status;});
-  Object.keys(byc).forEach(n=>{if(ovr[n])byc[n].url=ovr[n];});
-  const names=Object.keys(byc).filter(n=>byc[n].inv>0);
-  const grp=s=>s==='ACTIVE'?'ACTIVE':s==='PAUSED'?'PAUSED':(s==='WITH_ISSUES'||s==='DISAPPROVED')?'prob':'sem';
-  const cnt={todos:names.length,ACTIVE:0,PAUSED:0,prob:0,sem:0};
-  names.forEach(n=>cnt[grp(byc[n].status)]++);
-  const fb=$('ebfilter');fb.innerHTML='';
-  [['todos','Todos'],['ACTIVE','Ativos'],['PAUSED','Pausados'],['prob','Com problema'],['sem','Sem status']].forEach(([k,lb])=>{const b=document.createElement('button');b.className=_ebApF===k?'on':'';b.textContent=lb+' ('+cnt[k]+')';b.onclick=()=>{_ebApF=k;renderEbook();};fb.appendChild(b);});
-  let vis=names.filter(n=>_ebApF==='todos'||grp(byc[n].status)===_ebApF).sort((a,b)=>byc[b].inv-byc[a].inv);
-  let h='<thead><tr><th class="l">Criativo</th><th>Investido</th><th>Impr.</th><th>Cliques</th><th>CTR</th><th>Leads</th><th>CPL</th><th class="l">Meta</th><th class="l">Anúncio</th></tr></thead><tbody>';
-  if(!vis.length)h+='<tr><td class="l" colspan="9" style="color:var(--sub);padding:18px">Nenhum criativo com esse status.</td></tr>';
-  vis.forEach(n=>{const g=byc[n];const cpl=g.leads>0?g.inv/g.leads:null;const ctr=g.imp>0?g.clk/g.imp*100:null;const en=n.replace(/'/g,"\\'");
-    const meta=cpl===null?'<span class="st i">Aguardando</span>':cpl<=META_CPL?'<span class="st a">Abaixo da meta</span>':'<span class="st rose">Acima da meta</span>';
-    const es=EBST[g.status];const anun=es?`<span class="st ${es[0]}">${es[1]}</span>`:'<span class="st i">—</span>';
-    const ad=g.url?`<a class="lnk" href="${g.url}" target="_blank">Ver Ad ↗</a> <button class="xbtn mini" title="Editar link" onclick="editEbUrl('${en}')">✏️</button>`:`<button class="xbtn mini" onclick="editEbUrl('${en}')">+ link</button>`;
-    h+=`<tr><td class="l nm" title="${esc(n)}">${esc(n)}</td><td style="color:var(--amber)">${fmtR(g.inv)}</td><td>${fmtN(g.imp)}</td><td>${fmtN(g.clk)}</td><td>${ctr!=null?ctr.toFixed(2)+'%':'—'}</td><td style="color:var(--purple)">${fmtN(g.leads)}</td><td style="color:var(--pink)">${cpl!=null?fmtR(cpl):'—'}</td><td class="l">${meta}</td><td class="l">${ad?'<span style="display:inline-flex;gap:7px;align-items:center">'+anun+'</span>'+ad:anun}</td></tr>`;});
-  h+=`</tbody><tfoot><tr><td class="l">TOTAL</td><td style="color:var(--amber)">${fmtR(T.inv)}</td><td>${fmtN(T.imp)}</td><td>${fmtN(T.clk)}</td><td>${T.imp>0?(T.clk/T.imp*100).toFixed(2)+'%':'—'}</td><td style="color:var(--purple)">${fmtN(T.leads)}</td><td style="color:var(--pink)">${brl2(T.leads>0?T.inv/T.leads:0)}</td><td></td><td></td></tr></tfoot>`;
-  $('eb-tbl').innerHTML=h;
-  $('eb-note').innerHTML=rows.length?`${days.length} dias · desde ${d2(days[0].dt)} · meta CPL ≤ R$ 1,50 · fonte: planilha do Ebook (privada)`:'Sem dados no período';
-}
-/* --- wiring --- */
-document.querySelectorAll('#seg-toggle button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#seg-toggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');SEG_BRAND=b.dataset.b;$('seg-brand').textContent=b.dataset.b==='pati'?'Patrícia':'Abroader';DQ={de:'',ate:''};$('dq-de').value='';$('dq-ate').value='';loadSeg();}));
-document.addEventListener('change',e=>{if(e.target&&(e.target.id==='dq-de'||e.target.id==='dq-ate')){DQ.de=$('dq-de').value;DQ.ate=$('dq-ate').value;buildSegMonths();renderSeg();}});
 
 /* entrada em cascata */
 window.addEventListener('load',()=>{
