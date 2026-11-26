@@ -80,6 +80,14 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 .p-ink{position:absolute;z-index:0;top:5px;bottom:5px;border-radius:10px;background:linear-gradient(135deg,rgba(139,92,246,.9),rgba(244,114,182,.85));box-shadow:0 8px 16px -8px rgba(0,0,0,.5);transition:left .42s var(--ease),width .42s var(--ease);}
 .esp td.mh{box-shadow:inset 1px 0 0 rgba(244,114,182,.5),inset -1px 0 0 rgba(244,114,182,.5);}
 .esp th.mh{color:var(--pink);box-shadow:inset 1px 0 0 rgba(244,114,182,.5),inset -1px 0 0 rgba(244,114,182,.5);}
+.seg-bar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px;}
+.drange{display:inline-flex;align-items:center;gap:7px;padding:6px 8px;background:var(--glass);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);flex-wrap:wrap;}
+.drange input[type=date]{color-scheme:dark;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:9px;color:var(--ink);font-family:var(--body);font-size:12.5px;padding:6px 9px;cursor:pointer;}
+.drange input[type=date]:focus{outline:none;border-color:var(--purple);}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px;}
+.kc{border-radius:16px;padding:16px 18px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);}
+.kc .l{font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--sub);margin-bottom:9px;}
+.kc .v{font-family:var(--disp);font-size:24px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
 /* ===== CARDS ===== */
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;}
 .card{position:relative;border-radius:20px;padding:20px 22px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden;transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);}
@@ -148,11 +156,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 
   <div class="tabs rv" id="tabs"><span class="tab-ink" id="tab-ink"></span>
     <button class="tab on" data-p="geral">Geral</button>
-    <button class="tab" data-p="ebook">Ebook Renda Extra</button>
+    <button class="tab" data-p="seg">Seguidores</button>
+    <button class="tab" data-p="ebook">Ebook</button>
     <button class="tab" data-p="sri">SRI · Vendas</button>
-    <button class="tab" data-p="instagram">Instagram</button>
-    <button class="tab" data-p="youtube">YouTube</button>
-    <button class="tab" data-p="substack">Substack</button>
   </div>
 
   <!-- GERAL -->
@@ -187,12 +193,28 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
     <p class="foot-note" id="note">…</p>
   </div>
 
-  <!-- shells -->
-  <div class="panel" id="pn-ebook"><p class="eyebrow">Funil · Ebook Renda Extra em Dólar</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Detalhamento do funil de <b style="color:var(--purple)">captação pelo Ebook</b> entra aqui, investido, leads, CPL, conversão e evolução diária.</div></div>
-  <div class="panel" id="pn-sri"><p class="eyebrow">Funil · SRI (Vendas)</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">vendas do SRI</b>, checkout, vendas, faturamento e ROAS.</div></div>
-  <div class="panel" id="pn-instagram"><p class="eyebrow">Funil · Instagram</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)"><b style="color:var(--purple)">@patriciavogtt + @segunda.renda</b>, seguidores, posts, CPS e engajamento.</div></div>
-  <div class="panel" id="pn-youtube"><p class="eyebrow">Funil · YouTube</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">YouTube</b>, estrutura pronta pra quando começar o tráfego.</div></div>
-  <div class="panel" id="pn-substack"><p class="eyebrow">Funil · Substack</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">Substack</b>, novos assinantes, origem e conversão.</div></div>
+  <!-- SEGUIDORES -->
+  <div class="panel" id="pn-seg">
+    <div class="seg-bar rv">
+      <div class="vtoggle" id="seg-toggle"><button class="on" data-b="pati">Patrícia</button><button data-b="abroader">Abroader</button></div>
+      <div class="drange"><span class="p-lbl">De</span><input type="date" id="dq-de"><span class="p-lbl">até</span><input type="date" id="dq-ate"><button class="pbtn" id="dq-all">Tudo</button></div>
+    </div>
+    <p class="eyebrow rv">Seguidores · <span id="seg-brand">Patrícia</span></p>
+    <div class="kgrid rv">
+      <div class="kc"><div class="l">Novos seguidores</div><div class="v" style="color:var(--purple)" id="s-seg">—</div></div>
+      <div class="kc"><div class="l">Custo por seguidor</div><div class="v" style="color:var(--pink)" id="s-cps">—</div></div>
+      <div class="kc"><div class="l">Investido</div><div class="v" id="s-inv">—</div></div>
+      <div class="kc"><div class="l">Cliques</div><div class="v" style="color:var(--cyan)" id="s-clk">—</div></div>
+      <div class="kc"><div class="l">CPC</div><div class="v" id="s-cpc">—</div></div>
+      <div class="kc"><div class="l">CPM</div><div class="v" id="s-cpm">—</div></div>
+    </div>
+    <div class="box rv"><h3>Novos seguidores por dia</h3><p>barras = seguidores ganhos · linha = custo por seguidor</p><div class="cv" style="height:300px"><canvas id="c-seg"></canvas></div></div>
+    <p class="foot-note" id="seg-note"></p>
+  </div>
+
+  <!-- shells (fleshed next) -->
+  <div class="panel" id="pn-ebook"><p class="eyebrow">Funil · Ebook Renda Extra em Dólar</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Detalhamento do funil de <b style="color:var(--purple)">captação pelo Ebook</b> (investido, leads, CPL, conversão, evolução diária) entra aqui no próximo passo.</div></div>
+  <div class="panel" id="pn-sri"><p class="eyebrow">Funil · SRI (Vendas)</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">vendas do SRI</b> — checkout, vendas, faturamento e ROAS.</div></div>
 </div>
 
 <script>
@@ -235,6 +257,7 @@ function moveInk(btn){const ink=$('tab-ink');ink.style.left=btn.offsetLeft+'px';
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');moveInk(b);
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));$('pn-'+b.dataset.p).classList.add('on');
+  if(b.dataset.p==='seg'&&!_segLoaded){_segLoaded=true;loadSeg();}
 }));
 document.querySelectorAll('.vtoggle button').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.vtoggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
@@ -327,6 +350,57 @@ async function load(){
   }catch(e){$('live-txt').textContent='sem conexão';$('note').innerHTML='⚠️ '+e.message;}
   buildPeriod();renderHero(_first);renderCards();renderEsp();renderCharts();_first=false;
 }
+/* ===== SEGUIDORES (porta a dashboard da Pati, com filtro por dia) ===== */
+var _segLoaded=false, SEG_BRAND='pati', SEG_RAW={}, DQ={de:'',ate:''};
+const SEG_SHEET='1FqaWfL76VcYKeYGVbqO7qwi3EUqwj7YaLEL23Dlqgd8', SEGTAB={pati:'Dados',abroader:'Abroader'};
+const gvt=id=>`https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv`;
+function csv(t){const R=[];let r=[],f='',q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}else{if(c==='"')q=true;else if(c===','){r.push(f);f='';}else if(c==='\n'){r.push(f);R.push(r);r=[];f='';}else if(c!=='\r')f+=c;}}if(f.length||r.length){r.push(f);R.push(r);}return R;}
+function money(s){s=String(s||'').replace(/R\$/gi,'').replace(/\s/g,'').trim();if(!s||s==='-')return 0;if(s.indexOf(',')>=0)s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)||0;}
+function pint(s){return parseInt(String(s||'').replace(/\./g,'').replace(/[^\d-]/g,''))||0;}
+function pmd(s){const m=String(s||'').match(/(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/);if(!m)return null;return{d:+m[1],mo:+m[2],y:m[3]?(+m[3]<100?2000+ +m[3]:+m[3]):null};}
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const brl2=v=>v?'R$ '+v.toFixed(2).replace('.',','):'—';
+async function loadSeg(){
+  try{
+    if(!SEG_RAW[SEG_BRAND]){
+      const r=await fetch(`${gvt(SEG_SHEET)}&sheet=${encodeURIComponent(SEGTAB[SEG_BRAND])}&_=${Date.now()}`,{cache:'no-cache'});
+      const rows=csv(await r.text()),H=(rows[0]||[]).map(h=>h.trim().toLowerCase());
+      const ix=n=>H.findIndex(h=>h.indexOf(n)>=0);
+      const iD=ix('data'),iS=ix('novos seguidor'),iI=ix('investimento'),iC=ix('cliques'),iM=ix('impress'),iCps=ix('custo por novos'),iCpc=ix('cpc'),iCpm=ix('cpm');
+      const out=[];let yr=2026,pm=0;
+      for(let k=1;k<rows.length;k++){const row=rows[k];const p=pmd(iD>=0?row[iD]:'');if(!p)continue;
+        let y=p.y;if(y==null){if(p.mo<pm)yr++;y=yr;}else yr=y;pm=p.mo;
+        const dt=new Date(y,p.mo-1,p.d);
+        const seg=pint(row[iS]),inv=money(row[iI]);if(seg===0&&inv===0)continue;
+        out.push({dt,seg,inv,clk:iC>=0?pint(row[iC]):0,imp:iM>=0?pint(row[iM]):0,cps:(iCps>=0?money(row[iCps]):0)||(seg>0?inv/seg:0),cpc:iCpc>=0?money(row[iCpc]):0,cpm:iCpm>=0?money(row[iCpm]):0});
+      }
+      out.sort((a,b)=>a.dt-b.dt);SEG_RAW[SEG_BRAND]=out;
+    }
+    $('seg-note').textContent='';
+  }catch(e){$('seg-note').innerHTML='⚠️ não consegui ler os seguidores: '+e.message;}
+  renderSeg();
+}
+function renderSeg(){
+  const all=SEG_RAW[SEG_BRAND]||[];
+  if(all.length&&(!$('dq-de').value||!$('dq-ate').value)){const f=$('dq-de'),t=$('dq-ate');if(!f.value)f.value=iso(all[0].dt);if(!t.value)t.value=iso(all[all.length-1].dt);DQ.de=f.value;DQ.ate=t.value;}
+  const de=DQ.de?new Date(DQ.de+'T00:00'):null,at=DQ.ate?new Date(DQ.ate+'T23:59'):null;
+  const f=all.filter(r=>(!de||r.dt>=de)&&(!at||r.dt<=at));
+  const T=f.reduce((a,r)=>{a.seg+=r.seg;a.inv+=r.inv;a.clk+=r.clk;a.imp+=r.imp;return a;},{seg:0,inv:0,clk:0,imp:0});
+  $('s-seg').textContent=T.seg?fmtN(T.seg):'—';$('s-cps').textContent=brl2(T.seg>0?T.inv/T.seg:0);
+  $('s-inv').textContent=T.inv?fmtR(T.inv):'—';$('s-clk').textContent=T.clk?fmtN(T.clk):'—';
+  $('s-cpc').textContent=brl2(T.clk>0?T.inv/T.clk:0);$('s-cpm').textContent=brl2(T.imp>0?T.inv/T.imp*1000:0);
+  const lbl=f.map(r=>r.dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}));
+  if(ch.seg)ch.seg.destroy();
+  ch.seg=new Chart($('c-seg'),{data:{labels:lbl,datasets:[
+    {type:'bar',label:'Novos seguidores',data:f.map(r=>r.seg),backgroundColor:'rgba(167,139,250,.55)',borderRadius:4,yAxisID:'y',order:2},
+    {type:'line',label:'CPS',data:f.map(r=>r.cps||null),borderColor:C.pink,backgroundColor:C.pink,pointRadius:2,tension:.35,yAxisID:'y2',order:1,spanGaps:true}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{position:'top',labels:{boxWidth:9,boxHeight:9,usePointStyle:true,padding:12}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:15,autoSkip:true}},y:{position:'left',grid:{color:C.grid},border:{display:false}},y2:{position:'right',grid:{drawOnChartArea:false},border:{display:false},ticks:{callback:v=>'R$'+(+v).toFixed(2).replace('.',',')}}}}});
+  $('seg-note').innerHTML=f.length?`${f.length} dias no período · fonte: planilha [PATI] Seguidores (privada)`:'Sem dados no período selecionado';
+}
+document.querySelectorAll('#seg-toggle button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#seg-toggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');SEG_BRAND=b.dataset.b;$('seg-brand').textContent=b.dataset.b==='pati'?'Patrícia':'Abroader';$('dq-de').value='';$('dq-ate').value='';DQ={de:'',ate:''};loadSeg();}));
+document.addEventListener('change',e=>{if(e.target&&(e.target.id==='dq-de'||e.target.id==='dq-ate')){DQ.de=$('dq-de').value;DQ.ate=$('dq-ate').value;renderSeg();}});
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='dq-all'){$('dq-de').value='';$('dq-ate').value='';DQ={de:'',ate:''};renderSeg();}});
+
 /* entrada em cascata */
 window.addEventListener('load',()=>{
   const b=document.querySelector('.tab.on');if(b)moveInk(b);
