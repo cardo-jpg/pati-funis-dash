@@ -193,18 +193,25 @@ function setView(v,btn){
   document.getElementById('v-cards').classList.toggle('on',v==='cards');
   document.getElementById('v-plan').classList.toggle('on',v==='plan');
 }
+const sum=a=>(a||[]).reduce((x,y)=>x+(+y||0),0);
+const roasTxt=v=>(v==null||!isFinite(v))?'—':v.toFixed(2).replace('.',',')+'x';
+function roasBg(v){ if(v==null||!isFinite(v))return ''; if(v<1)return 'rgba(224,102,102,.92)'; if(v<3)return 'rgba(255,224,138,.9)'; if(v<6)return 'rgba(130,200,140,.9)'; return 'rgba(60,180,120,.95)'; }
+const cellR=v=>v>0?fmtR(v):'—';
+function totals(f){const inv=sum(f.inv),fat=sum(f.fat),leads=sum(f.leads);return{inv,fat,leads,roas:inv>0?fat/inv:null};}
+
 /* VISÃO 1 — cards por funil */
 function renderCards(){
   const w=document.getElementById('fcards'); w.innerHTML='';
   FUNIS.forEach(f=>{
+    const t=totals(f); const rc=t.roas==null?'var(--text)':(t.roas<1?'var(--red)':'var(--green)');
     const d=document.createElement('div'); d.className='fcard'; d.style.borderLeftColor=f.cor;
     d.innerHTML=`<div class="fcard-nm"><span class="funil-dot" style="background:${f.cor}"></span>${f.nome}</div>`+
       `<div class="fcard-tag">${f.tag}</div>`+
       `<div class="fcard-mx">`+
-        `<div class="fcard-m"><div class="l">Investido</div><div class="v cv">—</div></div>`+
-        `<div class="fcard-m"><div class="l">Faturamento</div><div class="v cp">—</div></div>`+
-        `<div class="fcard-m"><div class="l">ROAS</div><div class="v cg">—</div></div>`+
-        `<div class="fcard-m"><div class="l">Leads</div><div class="v cc">—</div></div>`+
+        `<div class="fcard-m"><div class="l">Investido</div><div class="v cv">${cellR(t.inv)}</div></div>`+
+        `<div class="fcard-m"><div class="l">Faturamento</div><div class="v cp">${cellR(t.fat)}</div></div>`+
+        `<div class="fcard-m"><div class="l">ROAS</div><div class="v" style="color:${rc}">${roasTxt(t.roas)}</div></div>`+
+        `<div class="fcard-m"><div class="l">Leads</div><div class="v cc">${t.leads?fmtN(t.leads):'—'}</div></div>`+
       `</div>`;
     w.appendChild(d);
   });
@@ -214,22 +221,51 @@ function renderEspelho(){
   document.getElementById('esp-head').innerHTML='<tr><th class="l">Origem / Tag</th>'+MES.map(m=>`<th>${m}</th>`).join('')+'<th>Total</th></tr>';
   let h='';
   FUNIS.forEach(f=>{
+    const inv=f.inv||[],fat=f.fat||[];
     h+=`<tr class="og"><td class="l" colspan="14" style="color:${f.cor}">● ${f.nome} · ${f.tag}</td></tr>`;
-    ['Investimento','Faturamento','ROAS'].forEach(r=>{
-      h+=`<tr class="sub"><td class="l">${r}</td>`+MES.map(()=>'<td>—</td>').join('')+'<td>—</td></tr>';
-    });
+    h+=`<tr class="sub"><td class="l">Investimento</td>`+MES.map((m,i)=>`<td>${cellR(inv[i]||0)}</td>`).join('')+`<td>${cellR(sum(inv))}</td></tr>`;
+    h+=`<tr class="sub"><td class="l">Faturamento</td>`+MES.map((m,i)=>`<td>${cellR(fat[i]||0)}</td>`).join('')+`<td>${cellR(sum(fat))}</td></tr>`;
+    const roasCell=(iv,fv)=>{const r=iv>0?fv/iv:null,bg=roasBg(r);return `<td class="roas" style="${bg?'background:'+bg+';color:#0b1525':''}">${roasTxt(r)}</td>`;};
+    h+=`<tr class="sub"><td class="l">ROAS</td>`+MES.map((m,i)=>roasCell(inv[i]||0,fat[i]||0)).join('')+roasCell(sum(inv),sum(fat))+`</tr>`;
   });
   document.getElementById('esp-body').innerHTML=h;
 }
-renderCards(); renderEspelho();
-/* gráficos (vazios até conectar a fonte) */
-new Chart(document.getElementById('c-mes'),{type:'bar',
-  data:{labels:MES,datasets:[{label:'Investido',data:[],backgroundColor:C.purple,borderRadius:4},{label:'Faturamento',data:[],backgroundColor:C.pink,borderRadius:4}]},
-  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid}}}}});
-new Chart(document.getElementById('c-share'),{type:'doughnut',
-  data:{labels:FUNIS.map(f=>f.nome),datasets:[{data:FUNIS.map(()=>1),backgroundColor:PAL,borderColor:'#131f30',borderWidth:3}]},
-  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:7,font:{size:10}}}}}});
-document.getElementById('geral-note').innerHTML='⚙️ Estrutura pronta — duas visões (cards + espelho da planilha). <b style="color:var(--purple)">Compartilhe a planilha de estratégia (ou confirme a fonte)</b> que eu ligo os números reais.';
+let ch={};
+function renderCharts(){
+  const invM=MES.map((m,i)=>FUNIS.reduce((a,f)=>a+(+((f.inv||[])[i])||0),0));
+  const fatM=MES.map((m,i)=>FUNIS.reduce((a,f)=>a+(+((f.fat||[])[i])||0),0));
+  if(ch.mes)ch.mes.destroy();
+  ch.mes=new Chart(document.getElementById('c-mes'),{type:'bar',data:{labels:MES,datasets:[{label:'Investido',data:invM,backgroundColor:C.purple,borderRadius:4},{label:'Faturamento',data:fatM,backgroundColor:C.pink,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid}}}}});
+  if(ch.share)ch.share.destroy();
+  const sh=FUNIS.map(f=>sum(f.inv)),has=sh.some(x=>x>0);
+  ch.share=new Chart(document.getElementById('c-share'),{type:'doughnut',data:{labels:FUNIS.map(f=>f.nome),datasets:[{data:has?sh:FUNIS.map(()=>1),backgroundColor:PAL,borderColor:'#131f30',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:7,font:{size:10}}}}}});
+}
+function renderKPIs(){
+  const T=FUNIS.reduce((a,f)=>{a.inv+=sum(f.inv);a.fat+=sum(f.fat);a.leads+=sum(f.leads);return a;},{inv:0,fat:0,leads:0});
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  set('k-inv',cellR(T.inv)); set('k-fat',cellR(T.fat));
+  set('k-roas',T.inv>0?roasTxt(T.fat/T.inv):'—'); set('k-leads',T.leads?fmtN(T.leads):'—');
+  set('k-cpl',T.leads>0?fmtR(T.inv/T.leads):'—');
+}
+/* ===== FONTE (Apps Script Web App — lê a planilha privada AO VIVO, via JSONP) ===== */
+const WEBAPP_URL=''; // <<< cole aqui a URL /exec do Apps Script (código em apps-script-funis.gs)
+function jsonp(url){return new Promise((res,rej)=>{const cb='__fn'+Math.random().toString(36).slice(2);window[cb]=d=>{res(d);try{delete window[cb];s.remove();}catch(e){}};const s=document.createElement('script');s.onerror=()=>rej(new Error('rede'));s.src=url+(url.indexOf('?')<0?'?':'&')+'callback='+cb+'&_='+Date.now();document.body.appendChild(s);});}
+async function loadFunis(){
+  if(WEBAPP_URL){
+    try{
+      const d=await jsonp(WEBAPP_URL);
+      if(d.erro)throw new Error(d.erro);
+      (d.funis||[]).forEach((f,i)=>{if(FUNIS[i]){FUNIS[i].inv=f.inv;FUNIS[i].fat=f.fat;FUNIS[i].leads=f.leads;}});
+      document.getElementById('h-sub').textContent='Lê a planilha ao vivo · atualizado '+new Date(d.atualizado).toLocaleString('pt-BR');
+      document.getElementById('geral-note').textContent='';
+    }catch(e){document.getElementById('geral-note').innerHTML='⚠️ Não consegui ler a fonte ('+e.message+'). Confere a URL /exec do Apps Script.';}
+  } else {
+    document.getElementById('geral-note').innerHTML='⚙️ Estrutura pronta — <b style="color:var(--purple)">falta colar a URL /exec do Apps Script</b> (código em <code>apps-script-funis.gs</code>) pra ligar os números ao vivo.';
+  }
+  renderCards(); renderEspelho(); renderCharts(); renderKPIs();
+}
+loadFunis();
+setInterval(loadFunis,60000); // re-lê a cada 1 min (sempre pega a última edição)
 </script>
 </body>
 </html>
