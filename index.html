@@ -61,6 +61,29 @@ tfoot td{font-weight:800;border-top:2px solid var(--border);}
 .note{text-align:center;font-size:12px;color:var(--sub);margin-top:22px;}
 .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
 .pill-roas{background:rgba(0,229,160,.1);color:var(--green);}
+/* toggle de visão */
+.vtoggle{display:inline-flex;gap:3px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:18px;}
+.vtoggle button{padding:7px 16px;font-size:12px;font-weight:700;color:var(--sub);background:none;border:none;border-radius:8px;cursor:pointer;}
+.vtoggle button.on{background:var(--purple-d);color:#fff;}
+.vview{display:none;} .vview.on{display:block;}
+/* cards por funil */
+.fcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:13px;}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:16px 17px;border-left:3px solid var(--purple);}
+.fcard-nm{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+.fcard-tag{font-size:10px;color:var(--sub);margin:5px 0 14px;font-family:ui-monospace,monospace;}
+.fcard-mx{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;}
+.fcard-m .l{font-size:9px;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;}
+.fcard-m .v{font-size:18px;font-weight:800;margin-top:2px;}
+/* espelho da planilha */
+.esp-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;}
+.esp{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap;}
+.esp th{background:var(--card2);color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:.6px;padding:9px 11px;text-align:right;position:sticky;top:0;}
+.esp th.l{text-align:left;}
+.esp td{padding:7px 11px;border-top:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums;}
+.esp td.l{text-align:left;}
+.esp tr.og td{background:rgba(167,139,250,.12);font-weight:700;color:var(--text);}
+.esp tr.sub td.l{color:var(--sub);padding-left:22px;}
+.esp td.roas{font-weight:700;border-radius:3px;}
 </style>
 </head>
 <body>
@@ -111,19 +134,24 @@ tfoot td{font-weight:800;border-top:2px solid var(--border);}
       </div>
     </div>
 
-    <p class="sec">Comparativo por Funil</p>
-    <div class="box" style="padding:0;overflow:hidden">
-      <table>
-        <thead><tr>
-          <th>Funil</th><th>Origem / Tag</th>
-          <th class="r">Investido</th><th class="r">Faturamento</th><th class="r">ROAS</th>
-          <th class="r">Leads</th><th class="r">CPL</th>
-        </tr></thead>
-        <tbody id="geral-tbody"></tbody>
-        <tfoot id="geral-tfoot"></tfoot>
-      </table>
+    <p class="sec">Funis</p>
+    <div class="vtoggle">
+      <button class="on" onclick="setView('cards',this)">▦ Cards por funil</button>
+      <button onclick="setView('plan',this)">▤ Espelho da planilha</button>
     </div>
-    <p class="note" id="geral-note">Conectando fonte de dados…</p>
+
+    <div id="v-cards" class="vview on">
+      <div class="fcards" id="fcards"></div>
+    </div>
+
+    <div id="v-plan" class="vview">
+      <div class="esp-wrap">
+        <table class="esp"><thead id="esp-head"></thead><tbody id="esp-body"></tbody></table>
+      </div>
+      <p class="note" style="text-align:left;margin-top:10px">Espelho fiel da planilha <b>ANÁLISE DE ROAS POR ESTRATÉGIA</b> — origem · tag · investimento · faturamento · ROAS por mês, com o heatmap de ROAS.</p>
+    </div>
+
+    <p class="note" id="geral-note">…</p>
   </div>
 </div>
 
@@ -158,30 +186,50 @@ const FUNIS=[
   {nome:'Lista de espera',tag:'abroader-sri-listadeespera',cor:C.yellow},
 ];
 
-/* Placeholder de estrutura — a fonte real (planilha de estratégia / Meta) é conectada no próximo passo. */
-function renderGeral(){
-  const tb=document.getElementById('geral-tbody'); tb.innerHTML='';
-  FUNIS.forEach(f=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td><span class="funil-dot" style="background:${f.cor}"></span>${f.nome}</td>`+
-      `<td style="color:var(--sub);font-size:12px">${f.tag}</td>`+
-      `<td class="r">—</td><td class="r">—</td><td class="r"><span class="pill pill-roas">—</span></td><td class="r">—</td><td class="r">—</td>`;
-    tb.appendChild(tr);
-  });
-  document.getElementById('geral-tfoot').innerHTML=`<tr><td>TOTAL</td><td></td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td class="r">—</td></tr>`;
-  // gráficos de exemplo (vazios até conectar)
-  new Chart(document.getElementById('c-mes'),{type:'bar',
-    data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
-      datasets:[{label:'Investido',data:[],backgroundColor:C.purple,borderRadius:4},
-               {label:'Faturamento',data:[],backgroundColor:C.pink,borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},
-      scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid}}}}});
-  new Chart(document.getElementById('c-share'),{type:'doughnut',
-    data:{labels:FUNIS.map(f=>f.nome),datasets:[{data:FUNIS.map(()=>1),backgroundColor:PAL,borderColor:'#131f30',borderWidth:3}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:7,font:{size:10}}}}}});
-  document.getElementById('geral-note').innerHTML='⚙️ Estrutura pronta — <b style="color:var(--purple)">aguardando você confirmar os funis e a fonte de dados</b> pra ligar os números reais.';
+const MES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+function setView(v,btn){
+  document.querySelectorAll('.vtoggle button').forEach(b=>b.classList.remove('on'));
+  if(btn)btn.classList.add('on');
+  document.getElementById('v-cards').classList.toggle('on',v==='cards');
+  document.getElementById('v-plan').classList.toggle('on',v==='plan');
 }
-renderGeral();
+/* VISÃO 1 — cards por funil */
+function renderCards(){
+  const w=document.getElementById('fcards'); w.innerHTML='';
+  FUNIS.forEach(f=>{
+    const d=document.createElement('div'); d.className='fcard'; d.style.borderLeftColor=f.cor;
+    d.innerHTML=`<div class="fcard-nm"><span class="funil-dot" style="background:${f.cor}"></span>${f.nome}</div>`+
+      `<div class="fcard-tag">${f.tag}</div>`+
+      `<div class="fcard-mx">`+
+        `<div class="fcard-m"><div class="l">Investido</div><div class="v cv">—</div></div>`+
+        `<div class="fcard-m"><div class="l">Faturamento</div><div class="v cp">—</div></div>`+
+        `<div class="fcard-m"><div class="l">ROAS</div><div class="v cg">—</div></div>`+
+        `<div class="fcard-m"><div class="l">Leads</div><div class="v cc">—</div></div>`+
+      `</div>`;
+    w.appendChild(d);
+  });
+}
+/* VISÃO 2 — espelho da planilha (origem × mês × ROAS, igual ao Excel) */
+function renderEspelho(){
+  document.getElementById('esp-head').innerHTML='<tr><th class="l">Origem / Tag</th>'+MES.map(m=>`<th>${m}</th>`).join('')+'<th>Total</th></tr>';
+  let h='';
+  FUNIS.forEach(f=>{
+    h+=`<tr class="og"><td class="l" colspan="14" style="color:${f.cor}">● ${f.nome} · ${f.tag}</td></tr>`;
+    ['Investimento','Faturamento','ROAS'].forEach(r=>{
+      h+=`<tr class="sub"><td class="l">${r}</td>`+MES.map(()=>'<td>—</td>').join('')+'<td>—</td></tr>';
+    });
+  });
+  document.getElementById('esp-body').innerHTML=h;
+}
+renderCards(); renderEspelho();
+/* gráficos (vazios até conectar a fonte) */
+new Chart(document.getElementById('c-mes'),{type:'bar',
+  data:{labels:MES,datasets:[{label:'Investido',data:[],backgroundColor:C.purple,borderRadius:4},{label:'Faturamento',data:[],backgroundColor:C.pink,borderRadius:4}]},
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{boxWidth:10,padding:12}}},scales:{x:{grid:{color:C.grid}},y:{grid:{color:C.grid}}}}});
+new Chart(document.getElementById('c-share'),{type:'doughnut',
+  data:{labels:FUNIS.map(f=>f.nome),datasets:[{data:FUNIS.map(()=>1),backgroundColor:PAL,borderColor:'#131f30',borderWidth:3}]},
+  options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{boxWidth:9,padding:7,font:{size:10}}}}}});
+document.getElementById('geral-note').innerHTML='⚙️ Estrutura pronta — duas visões (cards + espelho da planilha). <b style="color:var(--purple)">Compartilhe a planilha de estratégia (ou confirme a fonte)</b> que eu ligo os números reais.';
 </script>
 </body>
 </html>
