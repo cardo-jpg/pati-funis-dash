@@ -408,7 +408,7 @@ const d2=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'});
 const kfmt=v=>(+v>=1000?(+v/1000).toFixed(1)+'k':''+Math.round(+v));
 function dualChart(id,labels,bd,bl,bc,ld,ll,lc,lfmt){
   if(ch[id])ch[id].destroy();
-  ch[id]=new Chart($(id),{data:{labels,datasets:[
+  ch[id]=new Chart($('c-'+id),{data:{labels,datasets:[
     {type:'bar',label:bl,data:bd,backgroundColor:bc,borderRadius:4,yAxisID:'y',order:2},
     {type:'line',label:ll,data:ld,borderColor:lc,backgroundColor:lc,pointRadius:2,tension:.35,yAxisID:'y2',order:1,spanGaps:true}]},
     options:{responsive:true,maintainAspectRatio:false,animation:{duration:700,easing:'easeOutQuart'},plugins:{legend:{position:'top',labels:{boxWidth:9,boxHeight:9,usePointStyle:true,padding:12}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:15,autoSkip:true}},y:{position:'left',grid:{color:C.grid},border:{display:false}},y2:{position:'right',grid:{drawOnChartArea:false},border:{display:false},ticks:{callback:lfmt}}}}});
