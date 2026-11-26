@@ -102,6 +102,35 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 .dtable tbody tr:hover td{background:rgba(167,139,250,.05);}
 .dtable td.nm{max-width:320px;overflow:hidden;text-overflow:ellipsis;}
 .dtable tfoot td{font-weight:700;border-top:2px solid rgba(167,139,250,.35);background:rgba(167,139,250,.06);}
+.st.rose{background:rgba(255,122,138,.15);color:var(--rose);}
+.st.clk{cursor:pointer;transition:filter .15s;} .st.clk:hover{filter:brightness(1.25);}
+.iinp{width:84px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:7px;color:var(--ink);font:inherit;font-size:12.5px;padding:5px 8px;text-align:right;outline:none;font-variant-numeric:tabular-nums;}
+.iinp:focus{border-color:var(--purple);background:rgba(167,139,250,.08);}
+.iwrap{display:inline-flex;align-items:center;gap:4px;justify-content:flex-end;} .iwrap i{font-style:normal;color:var(--sub);font-size:11px;}
+.motivo{font-size:10.5px;color:var(--amber);margin-top:3px;white-space:normal;}
+.pobs{font-size:10px;color:var(--sub);font-style:italic;margin-top:2px;white-space:normal;}
+.mbtn{background:linear-gradient(135deg,var(--purple),var(--pink));color:#0a0712;border:none;border-radius:9px;padding:7px 13px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .15s;}
+.mbtn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(167,139,250,.3);}
+.xbtn{background:rgba(255,122,138,.1);border:1px solid rgba(255,122,138,.25);color:var(--rose);border-radius:7px;width:26px;height:26px;cursor:pointer;font-size:12px;line-height:1;flex:none;}
+.xbtn.mini{width:auto;height:auto;padding:3px 7px;background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:var(--purple);font-size:11px;}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(5,4,12,.74);backdrop-filter:blur(6px);z-index:1000;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;animation:mfade .25s var(--ease);}
+@keyframes mfade{from{opacity:0}to{opacity:1}}
+.modal{background:linear-gradient(180deg,rgba(24,18,40,.98),rgba(14,10,26,.98));border:1px solid rgba(167,139,250,.2);border-radius:18px;padding:24px;width:580px;max-width:96vw;max-height:88vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+.modal h3{font:600 15px var(--disp);margin:0 0 4px;} .modal .msub{font-size:11px;color:var(--sub);margin:0 0 16px;}
+.modal hr{border:none;border-top:1px solid var(--line);margin:18px 0;}
+.modal .seclbl{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.08em;margin:0 0 10px;}
+.pli{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;}
+.pli-top{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.pli-nm{flex:1;min-width:0;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pli-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:8px;}
+.pli label,.mform label{display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;}
+.minp{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:8px;color:var(--ink);font:inherit;font-size:12.5px;padding:8px 10px;outline:none;width:100%;}
+.minp:focus{border-color:var(--purple);}
+.pli-empty{font-size:12px;color:var(--sub);text-align:center;padding:14px 0;}
+.mform{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;}
+.mform .full{grid-column:1/-1;}
+.ebtool{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;}
 .st{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;}
 .st.a{background:rgba(199,242,112,.14);color:var(--lime);} .st.i{background:rgba(255,255,255,.06);color:var(--sub);}
 .st.s{background:rgba(52,227,227,.13);color:var(--cyan);} .st.r{background:rgba(167,139,250,.14);color:var(--purple);}
@@ -232,7 +261,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
     </div>
     <p class="eyebrow rv">Rastreamento de seguidores · posts</p>
     <div class="box rv" style="padding:0;overflow:hidden">
-      <div class="tbl-top"><span class="tbl-ttl">Posts impulsionados</span><div class="pfilter" id="pfilter"></div></div>
+      <div class="tbl-top"><span class="tbl-ttl">Posts impulsionados</span><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div class="pfilter" id="pfilter"></div><button class="mbtn" onclick="openPostsModal()">✏️ Gerenciar posts</button></div></div>
       <div style="overflow-x:auto"><table class="dtable" id="posts-tbl"></table></div>
     </div>
     <p class="eyebrow rv">Detalhamento por dia</p>
@@ -243,6 +272,10 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
   <!-- EBOOK -->
   <div class="panel" id="pn-ebook">
     <p class="eyebrow rv">Ebook Renda Extra em Dólar · captação</p>
+    <div class="ebtool rv">
+      <div class="pfilter" id="ebdate"><button class="on" data-n="0" onclick="ebPreset(0,this)">Total</button><button data-n="7" onclick="ebPreset(7,this)">7 dias</button><button data-n="14" onclick="ebPreset(14,this)">14 dias</button><button data-n="30" onclick="ebPreset(30,this)">30 dias</button></div>
+      <div class="drange"><span class="p-lbl">De</span><input type="date" id="ebd-de"><span class="p-lbl">até</span><input type="date" id="ebd-ate"><button class="mbtn" style="padding:6px 11px;font-size:11px" onclick="ebCustom()">Aplicar</button></div>
+    </div>
     <div class="kgrid rv">
       <div class="kc" style="border-top:2px solid var(--amber)"><div class="l">Investido</div><div class="v" id="e-inv">—</div></div>
       <div class="kc" style="border-top:2px solid var(--purple)"><div class="l">Leads</div><div class="v" style="color:var(--purple)" id="e-leads">—</div></div>
@@ -253,10 +286,39 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
     </div>
     <div class="box rv"><h3>Leads por dia</h3><p>barras = leads captados · linha = CPL</p><div class="cv" style="height:300px"><canvas id="c-eb"></canvas></div></div>
     <p class="eyebrow rv">Por criativo</p>
-    <div class="box rv" style="padding:0;overflow:hidden"><div style="overflow-x:auto;max-height:480px"><table class="dtable" id="eb-tbl"></table></div></div>
+    <div class="box rv" style="padding:0;overflow:hidden">
+      <div class="tbl-top"><span class="tbl-ttl">Criativos · meta CPL ≤ R$ 1,50</span><div class="pfilter" id="ebfilter"></div></div>
+      <div style="overflow-x:auto;max-height:480px"><table class="dtable" id="eb-tbl"></table></div>
+    </div>
     <p class="foot-note" id="eb-note"></p>
   </div>
   <div class="panel" id="pn-sri"><p class="eyebrow">Funil · SRI (Vendas)</p><div class="box" style="text-align:center;padding:46px 24px;color:var(--sub)">Funil de <b style="color:var(--purple)">vendas do SRI</b> — checkout, vendas, faturamento e ROAS.</div></div>
+</div>
+
+<!-- MODAL: Gerenciar posts -->
+<div class="modal-bg" id="posts-modal" onclick="if(event.target===this)closePostsModal()">
+  <div class="modal">
+    <h3>✏️ Gerenciar posts · <span id="pm-brand">Patrícia</span></h3>
+    <p class="msub">Edita direto aqui — salva sozinho no servidor (Sinapse). Clique no status pra alternar Ativo → Inativo → Subir → Reserva.</p>
+    <div id="post-list"></div>
+    <hr>
+    <p class="seclbl">Adicionar post</p>
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Nome do post<input class="minp" id="f-nome" placeholder="Ex: CARROSSEL - Renda extra que eu faria…"></label>
+    <label style="display:flex;flex-direction:column;gap:4px;font-size:10px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Link do Instagram<input class="minp" id="f-link" placeholder="https://www.instagram.com/p/…"></label>
+    <div class="mform">
+      <label>Investimento (R$)<input class="minp" id="f-inv" type="number" step="0.01" min="0" placeholder="0,00"></label>
+      <label>Seguidores<input class="minp" id="f-seg" type="number" min="0" placeholder="0"></label>
+      <label>Valor diário (R$)<input class="minp" id="f-dia" type="number" step="0.01" min="0" placeholder="0"></label>
+      <label>Status<select class="minp" id="f-status"><option value="ativo">Ativo</option><option value="inativo">Inativo</option><option value="subir">Subir</option><option value="reserva">Reserva</option></select></label>
+      <label class="full">Observação<input class="minp" id="f-obs" placeholder="Ex: bloqueado pelo Meta, aguardando revisão…"></label>
+    </div>
+    <button class="mbtn" onclick="draftAddPost()" style="width:100%;justify-content:center">+ Adicionar post</button>
+    <hr>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="p-save" style="flex:1;font-size:12px;font-weight:700;color:var(--lime)">✓ salvo</span>
+      <button class="mbtn" onclick="closePostsModal()">✓ Fechar</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -471,55 +533,127 @@ function renderSegDaily(f){
   $('seg-daily').innerHTML=h+'</tbody>';
   $('seg-daily').querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(SEGSORT.k===k)SEGSORT.d=-SEGSORT.d;else SEGSORT={k,d:-1};renderSegDaily(f);});
 }
-/* --- Posts (Sinapse) --- */
+/* --- Posts (Sinapse) — leitura + gestão (add/editar/status) com auto-save --- */
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const PSTAT={ativo:['a','● Ativo'],inativo:['i','⏸ Inativo'],subir:['s','📤 Subir'],reserva:['r','🗂 Reserva']};
+const PCYCLE={ativo:'inativo',inativo:'subir',subir:'reserva',reserva:'ativo'};
+let _psaveT=null;
+function postsArr(){return POSTS[SEG_BRAND]||(POSTS[SEG_BRAND]=[]);}
 async function loadPosts(){
-  try{if(!POSTS[SEG_BRAND]){const r=await fetch(POSTS_API+'?profile='+SEG_BRAND+'&_='+Date.now(),{cache:'no-cache'});const j=await r.json();POSTS[SEG_BRAND]=j.posts||[];}}catch(e){POSTS[SEG_BRAND]=[];}
+  try{
+    const r=await fetch(POSTS_API+'?profile='+SEG_BRAND+'&_='+Date.now(),{cache:'no-cache'});const j=await r.json();
+    if(j&&Array.isArray(j.posts)){POSTS[SEG_BRAND]=j.posts.map(x=>({nome:x.nome||'',link:x.link||'',inv:+x.inv||0,dia:+x.dia||0,saldo:+x.saldo||0,status:x.status||'ativo',obs:x.obs||''}));try{localStorage.setItem('pati_posts_'+SEG_BRAND,JSON.stringify(POSTS[SEG_BRAND]));}catch(_){}}
+    else throw 0;
+  }catch(e){try{POSTS[SEG_BRAND]=JSON.parse(localStorage.getItem('pati_posts_'+SEG_BRAND)||'[]');}catch(_){POSTS[SEG_BRAND]=[];}}
   renderPosts();
 }
+function savePosts(){try{localStorage.setItem('pati_posts_'+SEG_BRAND,JSON.stringify(postsArr()));}catch(e){}
+  showPSave('salvando');clearTimeout(_psaveT);_psaveT=setTimeout(()=>cloudSavePosts(SEG_BRAND,postsArr().slice(),0),700);}
+async function cloudSavePosts(profile,arr,att){
+  try{const r=await fetch(POSTS_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile,posts:arr})});const j=await r.json();if(j&&j.ok)showPSave('salvo');else throw 0;}
+  catch(e){if(att<5)setTimeout(()=>cloudSavePosts(profile,arr,att+1),1500);else showPSave('erro');}
+}
+function showPSave(s){const el=$('p-save');if(!el)return;if(s==='salvando'){el.textContent='● salvando…';el.style.color='var(--amber)';}else if(s==='salvo'){el.textContent='✓ salvo';el.style.color='var(--lime)';}else{el.textContent='⚠ sem conexão — tentando de novo…';el.style.color='var(--rose)';}}
+function motivoInativo(p,ref){const inv=+p.inv||0,seg=+p.saldo||0,cps=seg>0?inv/seg:0;
+  if(inv>0&&seg===0)return `⏸ gastou ${fmtR(inv)} e não trouxe seguidor`;
+  if(inv<10&&seg<=1)return `⏸ teste curto · ${fmtR(inv)} em ${seg} seguidor${seg===1?'':'es'}`;
+  if(cps>0&&cps>=Math.max(ref*3,5))return `⏸ CPS alto · ${brl2(cps)}/seg${ref>0?` · ${Math.round(cps/ref)}× a média`:''}`;
+  if(cps>0)return `⏸ ${fmtR(inv)} · ${brl2(cps)}/seg`;
+  return '⏸ pausado';}
+function cyclePost(idx){const a=postsArr();if(!a[idx])return;a[idx].status=PCYCLE[a[idx].status||'ativo']||'ativo';renderPosts();savePosts();}
+function inlinePost(idx,field,val){const a=postsArr();if(!a[idx])return;a[idx][field]=field==='inv'?(parseFloat(val)||0):(parseInt(val)||0);savePosts();renderPosts();}
 function renderPosts(){
-  const posts=POSTS[SEG_BRAND]||[];
-  const C_={todos:posts.length};['ativo','inativo','subir','reserva'].forEach(s=>C_[s]=posts.filter(p=>p.status===s).length);
+  const all=postsArr();
+  const cnt={todos:all.length,ativo:0,inativo:0,subir:0,reserva:0};
+  all.forEach(p=>{const s=p.status||'ativo';if(cnt[s]!=null)cnt[s]++;});
   const fb=$('pfilter');fb.innerHTML='';
-  [['todos','Todos'],['ativo','Ativos'],['inativo','Inativos'],['subir','Subir'],['reserva','Reserva']].forEach(([k,lb])=>{const b=document.createElement('button');b.className=PF===k?'on':'';b.textContent=lb+' ('+(C_[k]||0)+')';b.onclick=()=>{PF=k;renderPosts();};fb.appendChild(b);});
-  const show=(PF==='todos'?posts:posts.filter(p=>p.status===PF)).slice().sort((a,b)=>(b.saldo||0)-(a.saldo||0));
-  const sb={ativo:'a',inativo:'i',subir:'s',reserva:'r'},sl={ativo:'Ativo',inativo:'Inativo',subir:'Subir',reserva:'Reserva'};
+  [['todos','Todos'],['ativo','Ativos'],['inativo','Inativos'],['subir','Subir'],['reserva','Reserva']].forEach(([k,lb])=>{const b=document.createElement('button');b.className=PF===k?'on':'';b.textContent=lb+' ('+(cnt[k]||0)+')';b.onclick=()=>{PF=k;renderPosts();};fb.appendChild(b);});
+  let rI=0,rS=0;all.forEach(p=>{if((p.status||'ativo')==='ativo'){const s=+p.saldo||0;if(s>0){rI+=+p.inv||0;rS+=s;}}});const refCPS=rS>0?rI/rS:0;
+  const rowsF=all.map((p,idx)=>({p,idx})).filter(o=>PF==='todos'||(o.p.status||'ativo')===PF).sort((a,b)=>(b.p.saldo||0)-(a.p.saldo||0));
   let h='<thead><tr><th class="l">Post</th><th class="l">Status</th><th>Seguidores</th><th>Investimento</th><th>CPS</th><th class="l">Link</th></tr></thead><tbody>';
-  if(!show.length)h+='<tr><td class="l" colspan="6" style="color:var(--sub);padding:18px">Nenhum post neste filtro.</td></tr>';
-  show.forEach(p=>{const cps=p.saldo>0?p.inv/p.saldo:0;
-    h+=`<tr><td class="l nm">${p.nome||'—'}${p.obs?`<div style="font-size:10px;color:var(--sub);white-space:normal">${p.obs}</div>`:''}</td><td class="l"><span class="st ${sb[p.status]||'i'}">${sl[p.status]||p.status||'—'}</span></td><td style="color:var(--purple)">${fmtN(p.saldo||0)}</td><td style="color:var(--amber)">${p.inv?fmtR(p.inv):'—'}</td><td style="color:var(--pink)">${brl2(cps)}</td><td class="l">${p.link?`<a class="lnk" href="${p.link}" target="_blank">Ver ↗</a>`:'—'}</td></tr>`;});
+  if(!rowsF.length)h+='<tr><td class="l" colspan="6" style="color:var(--sub);padding:18px">Nenhum post neste filtro.</td></tr>';
+  rowsF.forEach(({p,idx})=>{const cps=p.saldo>0&&p.inv>0?p.inv/p.saldo:0;const stt=p.status||'ativo';const[cl,lb]=PSTAT[stt]||PSTAT.ativo;
+    const obs=p.obs?`<div class="pobs">${esc(p.obs)}</div>`:'';const mot=stt==='inativo'?`<div class="motivo">${motivoInativo(p,refCPS)}</div>`:'';
+    h+=`<tr><td class="l nm" title="${esc(p.nome||'')}">${esc(p.nome||'—')}${obs}${mot}</td>`+
+    `<td class="l"><span class="st ${cl} clk" title="Clique p/ alternar" onclick="cyclePost(${idx})">${lb}</span></td>`+
+    `<td><input class="iinp" type="number" min="0" value="${p.saldo||0}" onclick="this.select()" onchange="inlinePost(${idx},'saldo',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></td>`+
+    `<td><span class="iwrap"><i>R$</i><input class="iinp" type="number" min="0" step="0.01" value="${p.inv||0}" onclick="this.select()" onchange="inlinePost(${idx},'inv',this.value)" onkeydown="if(event.key==='Enter')this.blur()"></span></td>`+
+    `<td style="color:var(--pink)">${brl2(cps)}</td>`+
+    `<td class="l">${p.link?`<a class="lnk" href="${p.link}" target="_blank">Ver ↗</a>`:'—'}</td></tr>`;});
   $('posts-tbl').innerHTML=h+'</tbody>';
 }
-/* --- Ebook --- */
+/* --- Modal gerenciar posts --- */
+function openPostsModal(){$('pm-brand').textContent=SEG_BRAND==='pati'?'Patrícia':'Abroader';renderPostList();$('posts-modal').classList.add('open');}
+function closePostsModal(){const n=$('f-nome').value.trim(),l=$('f-link').value.trim();if(n&&l)draftAddPost();$('posts-modal').classList.remove('open');}
+function renderPostList(){const a=postsArr();
+  $('post-list').innerHTML=a.length?a.map((p,i)=>{const stt=p.status||'ativo';const[cl,lb]=PSTAT[stt]||PSTAT.ativo;const nm=esc((p.nome||'').replace(/^(CARROSSEL|REELS?)\s*-\s*/i,''))||'(sem nome)';
+    return `<div class="pli"><div class="pli-top"><span class="pli-nm" title="${esc(p.nome||'')}">${nm}</span><span class="st ${cl} clk" title="Clique p/ alternar" onclick="draftTogglePost(${i})">${lb}</span><button class="xbtn" title="Remover" onclick="draftDelPost(${i})">✕</button></div>
+    <div class="pli-grid"><label>Investimento (R$)<input class="minp" type="number" step="0.01" min="0" value="${p.inv||''}" oninput="postsArr()[${i}].inv=parseFloat(this.value)||0;savePosts()"></label><label>Seguidores<input class="minp" type="number" min="0" value="${p.saldo||''}" oninput="postsArr()[${i}].saldo=parseInt(this.value)||0;savePosts()"></label></div>
+    <input class="minp" placeholder="Observação (opcional)…" value="${esc(p.obs||'')}" oninput="postsArr()[${i}].obs=this.value;savePosts()"></div>`;}).join(''):'<p class="pli-empty">Nenhum post cadastrado.</p>';}
+function draftTogglePost(i){const a=postsArr();if(!a[i])return;a[i].status=PCYCLE[a[i].status||'ativo']||'ativo';renderPostList();renderPosts();savePosts();}
+function draftDelPost(i){if(!confirm('Remover este post?'))return;postsArr().splice(i,1);renderPostList();renderPosts();savePosts();}
+function draftAddPost(){const nome=$('f-nome').value.trim(),link=$('f-link').value.trim();if(!nome||!link){alert('Preencha pelo menos nome e link.');return;}
+  postsArr().push({nome,link,inv:parseFloat($('f-inv').value)||0,saldo:parseInt($('f-seg').value)||0,dia:parseFloat($('f-dia').value)||0,status:$('f-status').value||'ativo',obs:$('f-obs').value.trim()});
+  ['f-nome','f-link','f-inv','f-seg','f-dia','f-obs'].forEach(id=>$(id).value='');$('f-status').value='ativo';
+  renderPostList();renderPosts();savePosts();}
+/* --- Ebook (paridade: meta, status do anúncio, filtros, presets de data) --- */
+const META_CPL=1.50;
+let _ebApF='todos',_ebRange=null;
+const EBST={ACTIVE:['a','● Ativo'],PAUSED:['s','⏸ Pausado'],WITH_ISSUES:['rose','⚠ Problema'],DISAPPROVED:['rose','✕ Reprovado']};
+function ebCri(code){code=(code||'').trim();if(!code)return 'Outros';return code.replace(/^AD\d+_(IMG_|VID_)/,'').replace(/_/g,' ');}
 async function loadEbook(){
   try{
     const r=await fetch(`${gvt(EB_SHEET)}&sheet=${encodeURIComponent('Facebook Ebook')}&_=${Date.now()}`,{cache:'no-cache'});
     const rows=csv(await r.text()),H=(rows[0]||[]).map(h=>h.trim().toLowerCase());
     const ix=n=>H.findIndex(h=>h.indexOf(n)>=0);
-    const iD=ix('date'),iCr=ix('criativo'),iCa=ix('campanha'),iI=ix('investido'),iM=ix('impress'),iC=ix('clique'),iL=ix('lead'),iV=ix('visual'),iU=ix('url'),iSt=ix('status');
+    const iD=ix('date'),iCr=ix('criativo'),iP=ix('publico'),iI=ix('investido'),iM=ix('impress'),iC=ix('clique'),iL=ix('lead'),iV=ix('visual'),iU=ix('url'),iSt=ix('status');
     const out=[];
     for(let k=1;k<rows.length;k++){const row=rows[k];const p=pmd(iD>=0?row[iD]:'');if(!p)continue;const dt=new Date(p.y||2026,p.mo-1,p.d);
-      const inv=money(row[iI]),leads=iL>=0?pint(row[iL]):0;if(inv===0&&leads===0)continue;
-      out.push({dt,cr:(iCr>=0?row[iCr]:'').trim(),ca:(iCa>=0?row[iCa]:'').trim(),url:iU>=0?(row[iU]||'').trim():'',inv,imp:iM>=0?pint(row[iM]):0,clk:iC>=0?pint(row[iC]):0,leads,lp:iV>=0?pint(row[iV]):0});
+      out.push({dt,cr:ebCri(iCr>=0?row[iCr]:''),url:iU>=0?(row[iU]||'').trim():'',status:iSt>=0?(row[iSt]||'').trim():'',inv:money(row[iI]),imp:iM>=0?pint(row[iM]):0,clk:iC>=0?pint(row[iC]):0,leads:iL>=0?pint(row[iL]):0,lp:iV>=0?pint(row[iV]):0});
     }
-    out.sort((a,b)=>a.dt-b.dt);EB_RAW=out;$('eb-note').textContent='';
+    out.sort((a,b)=>a.dt-b.dt);EB_RAW=out;
+    if(out.length){$('ebd-de').value=iso(out[0].dt);$('ebd-ate').value=iso(out[out.length-1].dt);}
+    $('eb-note').textContent='';
   }catch(e){$('eb-note').innerHTML='⚠️ '+e.message;}
   renderEbook();
 }
+function ebView(){const all=EB_RAW||[];
+  if(!_ebRange||_ebRange.n===0)return all;
+  if(_ebRange.n){let mx=null;all.forEach(r=>{if(!mx||r.dt>mx)mx=r.dt;});if(!mx)return all;const cut=new Date(mx);cut.setDate(cut.getDate()-(_ebRange.n-1));return all.filter(r=>r.dt>=cut&&r.dt<=mx);}
+  if(_ebRange.de)return all.filter(r=>r.dt>=_ebRange.de&&r.dt<=_ebRange.ate);
+  return all;}
+function ebPreset(n,btn){_ebRange={n};document.querySelectorAll('#ebdate button').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');renderEbook();}
+function ebCustom(){const s=$('ebd-de').value,e=$('ebd-ate').value;if(!s||!e){alert('Escolha as duas datas.');return;}let de=new Date(s+'T00:00'),at=new Date(e+'T23:59');if(de>at){const t=de;de=at;at=t;}_ebRange={de,ate:at};document.querySelectorAll('#ebdate button').forEach(b=>b.classList.remove('on'));renderEbook();}
+function editEbUrl(n){let o={};try{o=JSON.parse(localStorage.getItem('pati_eb_urls')||'{}');}catch(e){}const nv=prompt('Link do anúncio — '+n+':',o[n]||'');if(nv===null)return;if(nv.trim())o[n]=nv.trim();else delete o[n];try{localStorage.setItem('pati_eb_urls',JSON.stringify(o));}catch(e){}renderEbook();}
 function renderEbook(){
-  const rows=EB_RAW||[],T=rows.reduce((a,r)=>{a.inv+=r.inv;a.imp+=r.imp;a.clk+=r.clk;a.leads+=r.leads;a.lp+=r.lp;return a;},{inv:0,imp:0,clk:0,leads:0,lp:0});
+  const rows=ebView();
+  const T=rows.reduce((a,r)=>{a.inv+=r.inv;a.imp+=r.imp;a.clk+=r.clk;a.leads+=r.leads;a.lp+=r.lp;return a;},{inv:0,imp:0,clk:0,leads:0,lp:0});
   $('e-inv').textContent=T.inv?fmtR(T.inv):'—';$('e-leads').textContent=T.leads?fmtN(T.leads):'—';$('e-cpl').textContent=brl2(T.leads>0?T.inv/T.leads:0);
   $('e-lp').textContent=T.lp?fmtN(T.lp):'—';$('e-clk').textContent=T.clk?fmtN(T.clk):'—';$('e-imp').textContent=T.imp?fmtN(T.imp):'—';
   $('e-lp-n').textContent='lead/LP '+(T.lp>0?Math.round(T.leads/T.lp*100)+'%':'—');$('e-ctr-n').textContent='CTR '+(T.imp>0?(T.clk/T.imp*100).toFixed(2)+'%':'—');
   const byd={};rows.forEach(r=>{const k=iso(r.dt);if(!byd[k])byd[k]={dt:r.dt,leads:0,inv:0};byd[k].leads+=r.leads;byd[k].inv+=r.inv;});
   const days=Object.values(byd).sort((a,b)=>a.dt-b.dt);
   dualChart('eb',days.map(d=>d2(d.dt)),days.map(d=>d.leads),'Leads','rgba(167,139,250,.55)',days.map(d=>d.leads>0?d.inv/d.leads:null),'CPL',C.pink,v=>'R$'+(+v).toFixed(2).replace('.',','));
-  const byc={};rows.forEach(r=>{const k=r.cr||'—';if(!byc[k])byc[k]={cr:k,inv:0,imp:0,clk:0,leads:0};const g=byc[k];g.inv+=r.inv;g.imp+=r.imp;g.clk+=r.clk;g.leads+=r.leads;});
-  const arr=Object.values(byc).sort((a,b)=>b.inv-a.inv);
-  let h='<thead><tr><th class="l">Criativo</th><th>Investido</th><th>Impr.</th><th>Cliques</th><th>CTR</th><th>Leads</th><th>CPL</th></tr></thead><tbody>';
-  arr.forEach(g=>{h+=`<tr><td class="l nm">${g.cr.replace(/^AD\d+_IMG_/,'').replace(/_/g,' ')}</td><td style="color:var(--amber)">${fmtR(g.inv)}</td><td>${fmtN(g.imp)}</td><td>${fmtN(g.clk)}</td><td>${g.imp>0?(g.clk/g.imp*100).toFixed(2)+'%':'—'}</td><td style="color:var(--purple)">${fmtN(g.leads)}</td><td style="color:var(--pink)">${brl2(g.leads>0?g.inv/g.leads:0)}</td></tr>`;});
-  h+=`</tbody><tfoot><tr><td class="l">TOTAL</td><td style="color:var(--amber)">${fmtR(T.inv)}</td><td>${fmtN(T.imp)}</td><td>${fmtN(T.clk)}</td><td>${T.imp>0?(T.clk/T.imp*100).toFixed(2)+'%':'—'}</td><td style="color:var(--purple)">${fmtN(T.leads)}</td><td style="color:var(--pink)">${brl2(T.leads>0?T.inv/T.leads:0)}</td></tr></tfoot>`;
+  let ovr={};try{ovr=JSON.parse(localStorage.getItem('pati_eb_urls')||'{}');}catch(e){}
+  const byc={};rows.slice().sort((a,b)=>a.dt-b.dt).forEach(r=>{const k=r.cr||'Outros';if(!byc[k])byc[k]={cr:k,inv:0,imp:0,clk:0,leads:0,url:'',status:''};const g=byc[k];g.inv+=r.inv;g.imp+=r.imp;g.clk+=r.clk;g.leads+=r.leads;if(r.url)g.url=r.url;if(r.status)g.status=r.status;});
+  Object.keys(byc).forEach(n=>{if(ovr[n])byc[n].url=ovr[n];});
+  const names=Object.keys(byc).filter(n=>byc[n].inv>0);
+  const grp=s=>s==='ACTIVE'?'ACTIVE':s==='PAUSED'?'PAUSED':(s==='WITH_ISSUES'||s==='DISAPPROVED')?'prob':'sem';
+  const cnt={todos:names.length,ACTIVE:0,PAUSED:0,prob:0,sem:0};
+  names.forEach(n=>cnt[grp(byc[n].status)]++);
+  const fb=$('ebfilter');fb.innerHTML='';
+  [['todos','Todos'],['ACTIVE','Ativos'],['PAUSED','Pausados'],['prob','Com problema'],['sem','Sem status']].forEach(([k,lb])=>{const b=document.createElement('button');b.className=_ebApF===k?'on':'';b.textContent=lb+' ('+cnt[k]+')';b.onclick=()=>{_ebApF=k;renderEbook();};fb.appendChild(b);});
+  let vis=names.filter(n=>_ebApF==='todos'||grp(byc[n].status)===_ebApF).sort((a,b)=>byc[b].inv-byc[a].inv);
+  let h='<thead><tr><th class="l">Criativo</th><th>Investido</th><th>Impr.</th><th>Cliques</th><th>CTR</th><th>Leads</th><th>CPL</th><th class="l">Meta</th><th class="l">Anúncio</th></tr></thead><tbody>';
+  if(!vis.length)h+='<tr><td class="l" colspan="9" style="color:var(--sub);padding:18px">Nenhum criativo com esse status.</td></tr>';
+  vis.forEach(n=>{const g=byc[n];const cpl=g.leads>0?g.inv/g.leads:null;const ctr=g.imp>0?g.clk/g.imp*100:null;const en=n.replace(/'/g,"\\'");
+    const meta=cpl===null?'<span class="st i">Aguardando</span>':cpl<=META_CPL?'<span class="st a">Abaixo da meta</span>':'<span class="st rose">Acima da meta</span>';
+    const es=EBST[g.status];const anun=es?`<span class="st ${es[0]}">${es[1]}</span>`:'<span class="st i">—</span>';
+    const ad=g.url?`<a class="lnk" href="${g.url}" target="_blank">Ver Ad ↗</a> <button class="xbtn mini" title="Editar link" onclick="editEbUrl('${en}')">✏️</button>`:`<button class="xbtn mini" onclick="editEbUrl('${en}')">+ link</button>`;
+    h+=`<tr><td class="l nm" title="${esc(n)}">${esc(n)}</td><td style="color:var(--amber)">${fmtR(g.inv)}</td><td>${fmtN(g.imp)}</td><td>${fmtN(g.clk)}</td><td>${ctr!=null?ctr.toFixed(2)+'%':'—'}</td><td style="color:var(--purple)">${fmtN(g.leads)}</td><td style="color:var(--pink)">${cpl!=null?fmtR(cpl):'—'}</td><td class="l">${meta}</td><td class="l">${ad?'<span style="display:inline-flex;gap:7px;align-items:center">'+anun+'</span>'+ad:anun}</td></tr>`;});
+  h+=`</tbody><tfoot><tr><td class="l">TOTAL</td><td style="color:var(--amber)">${fmtR(T.inv)}</td><td>${fmtN(T.imp)}</td><td>${fmtN(T.clk)}</td><td>${T.imp>0?(T.clk/T.imp*100).toFixed(2)+'%':'—'}</td><td style="color:var(--purple)">${fmtN(T.leads)}</td><td style="color:var(--pink)">${brl2(T.leads>0?T.inv/T.leads:0)}</td><td></td><td></td></tr></tfoot>`;
   $('eb-tbl').innerHTML=h;
-  $('eb-note').innerHTML=rows.length?`${days.length} dias · desde ${d2(days[0].dt)} · fonte: planilha do Ebook (privada)`:'Sem dados';
+  $('eb-note').innerHTML=rows.length?`${days.length} dias · desde ${d2(days[0].dt)} · meta CPL ≤ R$ 1,50 · fonte: planilha do Ebook (privada)`:'Sem dados no período';
 }
 /* --- wiring --- */
 document.querySelectorAll('#seg-toggle button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('#seg-toggle button').forEach(x=>x.classList.remove('on'));b.classList.add('on');SEG_BRAND=b.dataset.b;$('seg-brand').textContent=b.dataset.b==='pati'?'Patrícia':'Abroader';DQ={de:'',ate:''};$('dq-de').value='';$('dq-ate').value='';loadSeg();}));
