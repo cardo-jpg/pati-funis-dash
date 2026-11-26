@@ -73,6 +73,13 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 .vtoggle button svg{width:14px;height:14px;}
 .vtoggle button.on{background:linear-gradient(135deg,var(--violet),var(--pink));color:#fff;box-shadow:0 8px 16px -8px rgba(0,0,0,.5);}
 .vview{display:none;} .vview.on{display:block;}
+.period{position:relative;display:inline-flex;align-items:center;gap:3px;flex-wrap:wrap;padding:5px;background:var(--glass);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);margin-bottom:4px;}
+.p-lbl{font-size:12px;color:var(--sub);padding:0 10px 0 8px;}
+.pbtn{position:relative;z-index:1;padding:7px 13px;font-size:12.5px;font-weight:500;font-family:var(--body);color:var(--sub);background:none;border:none;border-radius:10px;cursor:pointer;transition:color .25s var(--ease);}
+.pbtn:hover{color:var(--ink);} .pbtn.on{color:#fff;}
+.p-ink{position:absolute;z-index:0;top:5px;bottom:5px;border-radius:10px;background:linear-gradient(135deg,rgba(139,92,246,.9),rgba(244,114,182,.85));box-shadow:0 8px 16px -8px rgba(0,0,0,.5);transition:left .42s var(--ease),width .42s var(--ease);}
+.esp td.mh{box-shadow:inset 1px 0 0 rgba(244,114,182,.5),inset -1px 0 0 rgba(244,114,182,.5);}
+.esp th.mh{color:var(--pink);box-shadow:inset 1px 0 0 rgba(244,114,182,.5),inset -1px 0 0 rgba(244,114,182,.5);}
 /* ===== CARDS ===== */
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;}
 .card{position:relative;border-radius:20px;padding:20px 22px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden;transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);}
@@ -150,6 +157,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:16px;pa
 
   <!-- GERAL -->
   <div class="panel on" id="pn-geral">
+    <div class="period rv" id="period"></div>
     <p class="eyebrow rv">Somatório · todos os funis</p>
     <div class="hero rv">
       <div class="hero-grid">
@@ -218,7 +226,9 @@ const roasTxt=v=>(v==null||!isFinite(v))?'—':v.toFixed(2).replace('.',',')+'×
 const roasCls=v=>v==null?'n':(v<1?'r':(v<3?'y':'g'));
 function roasHeat(v){if(v==null||!isFinite(v))return '';if(v<1)return 'background:rgba(255,122,138,.9);color:#2a0a10';if(v<3)return 'background:rgba(255,207,107,.88);color:#2a1e05';if(v<6)return 'background:rgba(165,224,138,.9);color:#0a1f0a';return 'background:rgba(132,230,150,.95);color:#06140a';}
 const cellR=v=>v>0?fmtR(v):'—';
-function totals(f){const inv=sum(f.inv),fat=sum(f.fat),leads=sum(f.leads);return{inv,fat,leads,roas:inv>0?fat/inv:null};}
+let PERIOD='all';
+const mval=a=>PERIOD==='all'?sum(a):(+((a||[])[PERIOD])||0);
+function totals(f){const inv=mval(f.inv),fat=mval(f.fat),leads=mval(f.leads);return{inv,fat,leads,roas:inv>0?fat/inv:null};}
 
 /* ===== TABS (indicador deslizante) ===== */
 function moveInk(btn){const ink=$('tab-ink');ink.style.left=btn.offsetLeft+'px';ink.style.width=btn.offsetWidth+'px';}
@@ -241,16 +251,25 @@ function countUp(el,to,type){
 }
 
 /* ===== RENDER ===== */
-function renderHero(){
-  const T=FUNIS.reduce((a,f)=>{a.inv+=sum(f.inv);a.fat+=sum(f.fat);a.leads+=sum(f.leads);return a;},{inv:0,fat:0,leads:0});
+function monthsWithData(){const s=new Set();FUNIS.forEach(f=>['inv','fat','leads'].forEach(k=>(f[k]||[]).forEach((v,i)=>{if(v>0)s.add(i);})));return[...s].sort((a,b)=>a-b);}
+function moveP(b){const k=$('p-ink');if(k&&b){k.style.left=b.offsetLeft+'px';k.style.width=b.offsetWidth+'px';}}
+function setPeriod(v,b){PERIOD=v;document.querySelectorAll('#period .pbtn').forEach(x=>x.classList.remove('on'));b.classList.add('on');moveP(b);renderHero(true);renderCards();renderEsp();}
+function buildPeriod(){
+  const box=$('period'),ms=monthsWithData();
+  box.innerHTML='<span class="p-ink" id="p-ink"></span><span class="p-lbl">Período</span>';
+  const mk=(t,v)=>{const b=document.createElement('button');b.className='pbtn'+((''+PERIOD===''+v)?' on':'');b.textContent=t;b.onclick=()=>setPeriod(v,b);box.appendChild(b);};
+  mk('Tudo','all'); ms.forEach(i=>mk(MES[i],i));
+  const on=box.querySelector('.pbtn.on')||box.querySelector('.pbtn');requestAnimationFrame(()=>moveP(on));
+}
+function renderHero(animate){
+  const T=FUNIS.reduce((a,f)=>{a.inv+=mval(f.inv);a.fat+=mval(f.fat);a.leads+=mval(f.leads);return a;},{inv:0,fat:0,leads:0});
   const roas=T.inv>0?T.fat/T.inv:null, cpl=T.leads>0?T.inv/T.leads:null;
-  countUp($('k-roas'),roas||0,'roas'); if(!roas)$('k-roas').textContent='—';
-  countUp($('k-inv'),T.inv,'r'); countUp($('k-fat'),T.fat,'r');
-  countUp($('k-leads'),T.leads,'n'); if(!T.leads)$('k-leads').textContent='—';
+  const put=(id,v,ty)=>{const el=$(id);if(animate&&v)countUp(el,v,ty);else el.textContent=ty==='roas'?(v?roasTxt(v):'—'):ty==='n'?(v?fmtN(v):'—'):(v>0?fmtR(v):'—');};
+  put('k-roas',roas,'roas');put('k-inv',T.inv,'r');put('k-fat',T.fat,'r');put('k-leads',T.leads,'n');
   $('k-cpl').textContent=cpl?fmtR(cpl):'—';
 }
 function renderCards(){
-  const w=$('cards');w.innerHTML='';const maxInv=Math.max(1,...FUNIS.map(f=>sum(f.inv)));
+  const w=$('cards');w.innerHTML='';const maxInv=Math.max(1,...FUNIS.map(f=>mval(f.inv)));
   FUNIS.forEach((f,i)=>{
     const t=totals(f),rc=roasCls(t.roas),bar=Math.round(t.inv/maxInv*100);
     const el=document.createElement('div');el.className='card rv';el.style.setProperty('--ac',f.cor);el.style.transitionDelay=(i*55)+'ms';
@@ -267,15 +286,16 @@ function renderCards(){
   requestAnimationFrame(()=>document.querySelectorAll('#cards .card').forEach(c=>{c.classList.add('in');const b=c.querySelector('.c-bar i');if(b)b.style.width=b.dataset.w+'%';}));
 }
 function renderEsp(){
-  $('esp-head').innerHTML='<tr><th class="l">Origem · Tag</th>'+MES.map(m=>`<th>${m}</th>`).join('')+'<th>Total</th></tr>';
+  const hl=i=>(''+PERIOD===''+i)?' mh':'';
+  $('esp-head').innerHTML='<tr><th class="l">Origem · Tag</th>'+MES.map((m,i)=>`<th class="${hl(i).trim()}">${m}</th>`).join('')+'<th>Total</th></tr>';
   let h='';
   FUNIS.forEach(f=>{
     const inv=f.inv||[],fat=f.fat||[];
-    h+=`<tr class="og"><td class="l">${f.nome}</td>`+MES.map(()=>'<td></td>').join('')+'<td></td></tr>';
-    h+=`<tr><td class="l">Investimento</td>`+MES.map((m,i)=>`<td>${cellR(inv[i]||0)}</td>`).join('')+`<td>${cellR(sum(inv))}</td></tr>`;
-    h+=`<tr><td class="l">Faturamento</td>`+MES.map((m,i)=>`<td>${cellR(fat[i]||0)}</td>`).join('')+`<td>${cellR(sum(fat))}</td></tr>`;
-    const rc=(iv,fv)=>{const r=iv>0?fv/iv:null;return `<td class="roasc" style="${roasHeat(r)}">${roasTxt(r)}</td>`;};
-    h+=`<tr><td class="l">ROAS</td>`+MES.map((m,i)=>rc(inv[i]||0,fat[i]||0)).join('')+rc(sum(inv),sum(fat))+`</tr>`;
+    h+=`<tr class="og"><td class="l">${f.nome}</td>`+MES.map((m,i)=>`<td class="${hl(i).trim()}"></td>`).join('')+'<td></td></tr>';
+    h+=`<tr><td class="l">Investimento</td>`+MES.map((m,i)=>`<td class="${hl(i).trim()}">${cellR(inv[i]||0)}</td>`).join('')+`<td>${cellR(sum(inv))}</td></tr>`;
+    h+=`<tr><td class="l">Faturamento</td>`+MES.map((m,i)=>`<td class="${hl(i).trim()}">${cellR(fat[i]||0)}</td>`).join('')+`<td>${cellR(sum(fat))}</td></tr>`;
+    const rc=(iv,fv,i)=>{const r=iv>0?fv/iv:null;return `<td class="roasc${hl(i)}" style="${roasHeat(r)}">${roasTxt(r)}</td>`;};
+    h+=`<tr><td class="l">ROAS</td>`+MES.map((m,i)=>rc(inv[i]||0,fat[i]||0,i)).join('')+rc(sum(inv),sum(fat),-1)+`</tr>`;
   });
   $('esp-body').innerHTML=h;
 }
@@ -305,7 +325,7 @@ async function load(){
     $('live-txt').textContent='ao vivo · '+new Date(d.atualizado).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     $('note').innerHTML='Lê a planilha de estratégia ao vivo, sem compartilhá-la · re-consulta a cada minuto';
   }catch(e){$('live-txt').textContent='sem conexão';$('note').innerHTML='⚠️ '+e.message;}
-  renderHero();renderCards();renderEsp();renderCharts();_first=false;
+  buildPeriod();renderHero(_first);renderCards();renderEsp();renderCharts();_first=false;
 }
 /* entrada em cascata */
 window.addEventListener('load',()=>{
@@ -314,7 +334,7 @@ window.addEventListener('load',()=>{
   load();
 });
 setInterval(load,60000);
-window.addEventListener('resize',()=>{const b=document.querySelector('.tab.on');if(b)moveInk(b);});
+window.addEventListener('resize',()=>{const b=document.querySelector('.tab.on');if(b)moveInk(b);const p=document.querySelector('#period .pbtn.on');if(p)moveP(p);});
 </script>
 </body>
 </html>
